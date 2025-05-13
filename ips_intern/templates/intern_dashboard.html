@@ -1,0 +1,463 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intern Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e0e5ff;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --dark: #1a1c2e;
+            --light: #f8f9ff;
+            --card-bg: #ffffff;
+            --text-muted: #6c757d;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 30px rgba(67, 97, 238, 0.15);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .top-header {
+            background: var(--gradient);
+            padding: 1.5rem 3rem;
+            color: white;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .brand img {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: white;
+            padding: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .welcome-text {
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            border: none;
+            height: fit-content;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-control {
+            padding: 0.9rem 1.2rem;
+            border: 2px solid rgba(67, 97, 238, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            background: var(--light);
+            width: 100%;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .certificate-container {
+            position: relative;
+            margin-top: 1.5rem;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .certificate-image {
+            width: 100%;
+            border-radius: var(--border-radius);
+            display: block;
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+        }
+
+        .certificate-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .lock-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .overlay-text {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .overlay-subtext {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .progress-container {
+            width: 100%;
+            background: var(--light);
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient);
+            width: 65%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.8rem;
+            text-align: center;
+        }
+
+        .messages {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 0.8rem;
+            background: rgba(76, 201, 240, 0.1);
+            color: #0d6efd;
+        }
+
+        .message i {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-header {
+                padding: 1.2rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .user-section {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .dashboard-container {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">
+        <div class="header-content">
+            <div class="brand">
+                <img src="{% static 'images/IPS WHITE batch 1.png' %}" alt="IPS Logo">
+                <h2>Intern Portal</h2>
+            </div>
+            <div class="user-section">
+                <div class="welcome-text">Welcome, {{ request.user.username }}</div>
+                <a href="{% url 'logout' %}" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3 class="card-title">Daily Task Update</h3>
+            </div>
+            <form method="POST" class="task-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" name="date" id="date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="topic" class="form-label">Today's Work</label>
+                    <textarea name="topic" id="topic" class="form-control" placeholder="Describe what you worked on today..." rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-paper-plane"></i> Submit Report
+                </button>
+            </form>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li class="message">
+                    <i class="fas fa-check-circle"></i> {{ message }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3 class="card-title">Certificate Status</h3>
+            </div>
+            <div class="certificate-status">
+                <div class="certificate-container">
+                    <img src="{% static 'images/certificate.png' %}" alt="Certificate" class="certificate-image">
+                    <div class="certificate-overlay">
+                        <i class="fas fa-lock lock-icon"></i>
+                        <div class="overlay-text">Certificate Locked</div>
+                        <div class="overlay-subtext">Complete your internship to unlock</div>
+                    </div>
+                </div>
+                <div class="progress-container" style="width: 100%; background-color: #eee; border-radius: 8px;">
+    <div class="progress-bar" style="width: {{ progress }}%; height: 25px; background-color: #4CAF50; border-radius: 8px;"></div>
+</div>
+
+<div class="status-text" style="margin-top: 10px;">
+    <i class="fas fa-info-circle"></i>
+    {{ progress }}% completed –
+    {% if progress >= 90 %}
+        Excellent progress!
+    {% elif progress >= 60 %}
+        Keep up the good work!
+    {% elif progress >= 30 %}
+        You're getting there!
+    {% else %}
+        Start submitting daily to catch up!
+    {% endif %}
+</div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+        });
+    </script>
+</body>
+</html>
