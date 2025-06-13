@@ -1,98 +1,162 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Apply for Intern</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .container {
-            max-width: 800px;
-            margin-top: 50px;
-        }
-        .section {
-            margin-bottom: 30px;
-        }
-    </style>
+    <title>Login Page</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- <link rel = "stylesheet" href = "../templates/static/login.css"> -->
+    <link rel="stylesheet" href="{% static 'login.css' %}">
 </head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;300;900&display=swap');
+
+    *{
+        margin: 0;
+        padding: 0; 
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+}
+    body{
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+        min-height: 100vh;
+        background: linear-gradient(90deg,#e2e2e2,#c9d6ff);
+}
+
+.container{
+    position: relative;
+    width: 850px;
+    height: 550px;
+    background: #fff;
+    border-radius: 30px;
+    box-shadow: 0 0 30px rgba(0,0,0,.4);
+}
+
+.form-box{
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: seagreen;
+    display: flex;
+    align-items: center;
+    color: #333;
+    text-align: center;
+}
+
+form{
+    width: 100%;
+}
+
+.container h1{
+    font-size: 40px;
+    margin: -10px 0;
+}
+
+.input-box{
+    position: relative;
+    margin: 30px 0;
+}
+
+.input-box input{
+    width: 100%;
+    padding: 13px 50px 13px 20px;
+    background: #eee;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.input-box input::placeholder{
+    color: #888;
+    font-weight: 400;
+}
+
+.input-box i{
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #888;
+}
+
+.forgot-link{
+    margin: 25px 0 15px;
+    margin-left: 200px;
+}
+
+.forgot-link a{
+    font-size: 15px;
+    color: #333;
+    text-decoration: none;
+}
+
+.btn{
+    width: 100%;
+    height: 48px;
+    background: #5E62DB;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,.2);
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    color: #fff;
+    font-weight: 700;
+}
+
+</style>
+
 <body>
+    
+    <div class="container">
+        <div class="form-box login">
+            <form action="">
+                <h1>Login</h1>
+                <div class = "input-box">
+                    <input type="text" placeholder="Username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class = "input-box">
+                    <input type="password" placeholder="Password" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p>-----or-----</p>
+                <button class="btn">Apply for Intern</button>
+            </form>
+        </div>
 
-<div class="container">
-    <!-- Login Form Section -->
-    <div class="section">
-        <h2>Login</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+        <div class="form-box Register">
+            <form action="">
+                <h1>Register</h1>
+                <div class = "input-box">
+                    <input type="text" placeholder="Username" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class = "input-box">
+                    <input type="password" placeholder="Password" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <p>-----or-----</p>
+                <button class="btn">Apply for Intern</button>
+            </form>
+        </div>
     </div>
 
-    <hr>
-
-    <!-- Apply for Intern Form Section -->
-    <div class="section">
-        <h2>Apply for Intern</h2>
-        <form method="POST">
-            {% csrf_token %}
-            
-            <!-- Intern Application Fields -->
-            <div class="form-group">
-                <label for="id_name">Name</label>
-                <input type="text" class="form-control" id="id_name" name="name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_roll_no">Roll Number</label>
-                <input type="text" class="form-control" id="id_roll_no" name="roll_no" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_department">Department</label>
-                <input type="text" class="form-control" id="id_department" name="department" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_cgpa">CGPA</label>
-                <input type="number" step="0.01" class="form-control" id="id_cgpa" name="cgpa" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_arrears">Number of Arrears</label>
-                <input type="number" class="form-control" id="id_arrears" name="arrears" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_gender">Gender</label>
-                <select class="form-control" id="id_gender" name="gender" required>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="id_clg_mailid">College Email ID</label>
-                <input type="email" class="form-control" id="id_clg_mailid" name="clg_mailid" required>
-            </div>
-
-            <!-- Dropdown for Course and Duration -->
-            <div class="form-group">
-                <label for="id_course_duration">Course and Duration</label>
-                <select class="form-control" id="id_course_duration" name="course_duration" required>
-                    {% for course in courses %}
-                        <option value="{{ course.id }}">{{ course.course_name }} - {{ course.duration }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-success">Apply</button>
-        </form>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
