@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Internship Applications</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+  <h2 class="mb-4">📄 Internship Applications</h2>
+
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Name</th>
+        <th>Roll No</th>
+        <th>Department</th>
+        <th>Email</th>
+        <th>Course</th>
+        <th>CGPA</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in applications %}
+      <tr>
+        <td>{{ app.name }}</td>
+        <td>{{ app.roll_no }}</td>
+        <td>{{ app.department }}</td>
+        <td>{{ app.clg_mailid }}</td>
+        <td>{{ app.course_duration }}</td>
+        <td>{{ app.cgpa }}</td>
+        <td>
+  <a href="{% url 'internship_applications_detail' app.id %}" class="btn btn-primary btn-sm">View</a>
+</td>
+
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="text-center">No applications found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">⬅ Back to Dashboard</a>
+</div>
+
+</body>
+</html>
