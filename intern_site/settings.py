@@ -111,6 +111,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+import os
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -134,3 +137,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'mranjith2506@gmail.com'      # 🔁 Use your admin mail
 EMAIL_HOST_PASSWORD = 'rxic lydf ygww nleo'     # 🔁 App Password (not your real password)
+
+

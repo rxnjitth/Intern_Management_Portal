@@ -41,6 +41,7 @@ class InternApplication(models.Model):
     is_approved = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False) 
     is_certified = models.BooleanField(default=False)  
+    just_approved = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name} - {self.roll_no}'
