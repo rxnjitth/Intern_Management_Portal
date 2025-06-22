@@ -4,8 +4,8 @@ from .models import TaskReport
 class TaskReportForm(forms.ModelForm):
     class Meta:
         model = TaskReport
-        fields = ['date', 'topic']
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'topic': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Enter today\'s work...'}),
-        }
+        fields = ['topic']  # exclude 'date'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['topic'].widget.attrs.update({'placeholder': 'Enter your task for today'})

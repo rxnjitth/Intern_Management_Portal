@@ -17,9 +17,13 @@ urlpatterns = [
     path('internship_applications_detail/<int:id>/', views.internship_applications_detail, name='internship_applications_detail'),
     path('applications/<int:app_id>/approve/', views.approve_application, name='approve_application'),
     path('applications/<int:app_id>/reject/', views.reject_application, name='reject_application'),
-
+    path('certified_interns/', views.certified_interns_view, name='certified_interns'),
+    path('export/interns/', views.export_interns_excel, name='export_interns_excel'),
+   
 #interns urls
     path('intern_dashboard/', views.intern_dashboard, name='intern_dashboard'),  # Intern dashboard
+    path('intern/<int:user_id>/certificate/download/', views.download_certificate, name='download_certificate'),
+    path('download_pdf/', views.download_task_reports_pdf, name='download_task_reports_pdf'),
 
 
 

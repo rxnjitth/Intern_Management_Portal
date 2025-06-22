@@ -72,20 +72,29 @@
 
     <!-- Certified Interns -->
     <div class="col-md-4">
-      <div class="card text-white bg-warning dashboard-card">
-        <div class="card-body text-center">
-          <i class="bi bi-award-fill fs-1"></i>
-          <h5 class="card-title mt-2">Certified Interns</h5>
-          <h2>{{ certified_interns|default:'--' }}</h2>
-          <p class="text-white-50 small">Total Approved</p>
+      <a href="{% url 'certified_interns' %}">
+        <div class="card text-white bg-warning dashboard-card">
+          <div class="card-body text-center">
+            <i class="bi bi-award-fill fs-1"></i>
+            <h5 class="card-title mt-2">Certified Interns</h5>
+            <h2>{{ certified_interns|default:'--' }}</h2>
+            <p class="text-white-50 small">View Certified Interns</p>
+          </div>
         </div>
-      </div>
+      </a>
     </div>
 
   </div>
 
+  <!-- Excel Download Button -->
+  <div class="text-center mt-5">
+    <a href="{% url 'export_interns_excel' %}" class="btn btn-outline-success">
+      ⬇️ Download All Intern Data (Excel)
+    </a>
+  </div>
+
   <!-- Additional Message -->
-  <div class="row mt-5">
+  <div class="row mt-4">
     <div class="col text-center">
       <p class="text-muted">Need more features? Task reports, intern list, certifications — just ask 🛠️</p>
     </div>
