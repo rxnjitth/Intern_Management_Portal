@@ -2,12 +2,13 @@ from django.contrib import admin
 from django.urls import path
 from ips_intern import views
 
+
 urlpatterns = [
     #admin urls
-    path('admin/', admin.site.urls),
-    path('', views.custom_login, name='login'),  # Login page
-    path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),  # Admin dashboard
+    path('', views.custom_login, name='login'), 
     path('logout/', views.custom_logout, name='custom_logout'),
+    path('apply/', views.apply_intern, name='apply_intern'),
+    path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),  # Admin dashboard
     path('interns/', views.all_interns_view, name='all_interns'),
     path('intern/<int:user_id>/', views.intern_detail_view, name='intern_detail'),
    
@@ -24,7 +25,9 @@ urlpatterns = [
     path('intern_dashboard/', views.intern_dashboard, name='intern_dashboard'),  # Intern dashboard
     path('intern/<int:user_id>/certificate/download/', views.download_certificate, name='download_certificate'),
     path('download_pdf/', views.download_task_reports_pdf, name='download_task_reports_pdf'),
+    path('download_certificate/', views.download_certificate, name='download_certificate'),
+   
 
+] 
 
-
-]
+    

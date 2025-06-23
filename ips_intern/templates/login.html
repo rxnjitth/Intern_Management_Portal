@@ -1,98 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Apply for Intern</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .container {
-            max-width: 800px;
-            margin-top: 50px;
-        }
-        .section {
-            margin-bottom: 30px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background: #f4f7fc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .btn-apply {
+      background-color: #28a745;
+      color: white;
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    .btn-apply:hover {
+      background-color: #218838;
+    }
+
+    .text-center a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .text-center a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Login Form Section -->
-    <div class="section">
-        <h2>Login</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+  <div class="login-box">
+    <h3 class="text-center mb-4">Login to Your Account</h3>
+
+    <!-- ✅ Flash Messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- ✅ Login Form -->
+    <form method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+
+    <div class="text-center mt-3">
+      Don't have an account yet?
     </div>
+    <!-- ✅ Apply for Internship -->
+    <a href="{% url 'apply_intern' %}" class="btn btn-apply">Apply for Internship</a>
 
-    <hr>
+    
+      
+  </div>
 
-    <!-- Apply for Intern Form Section -->
-    <div class="section">
-        <h2>Apply for Intern</h2>
-        <form method="POST">
-            {% csrf_token %}
-            
-            <!-- Intern Application Fields -->
-            <div class="form-group">
-                <label for="id_name">Name</label>
-                <input type="text" class="form-control" id="id_name" name="name" required>
-            </div>
+  <!-- ✅ Bootstrap JS for alerts -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
-            <div class="form-group">
-                <label for="id_roll_no">Roll Number</label>
-                <input type="text" class="form-control" id="id_roll_no" name="roll_no" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_department">Department</label>
-                <input type="text" class="form-control" id="id_department" name="department" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_cgpa">CGPA</label>
-                <input type="number" step="0.01" class="form-control" id="id_cgpa" name="cgpa" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_arrears">Number of Arrears</label>
-                <input type="number" class="form-control" id="id_arrears" name="arrears" required>
-            </div>
-
-            <div class="form-group">
-                <label for="id_gender">Gender</label>
-                <select class="form-control" id="id_gender" name="gender" required>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="id_clg_mailid">College Email ID</label>
-                <input type="email" class="form-control" id="id_clg_mailid" name="clg_mailid" required>
-            </div>
-
-            <!-- Dropdown for Course and Duration -->
-            <div class="form-group">
-                <label for="id_course_duration">Course and Duration</label>
-                <select class="form-control" id="id_course_duration" name="course_duration" required>
-                    {% for course in courses %}
-                        <option value="{{ course.id }}">{{ course.course_name }} - {{ course.duration }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-success">Apply</button>
-        </form>
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

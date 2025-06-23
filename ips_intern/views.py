@@ -12,62 +12,72 @@ from reportlab.pdfgen import canvas
 from django.contrib.auth.models import User
 import pandas as pd
 from django.http import HttpResponse
+import os
 
+def custom_login(request):
+    form = AuthenticationForm()
 
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                role = get_user_role(user)
+                return redirect('admin_dashboard' if role == 'ADMIN' else 'intern_dashboard')
+            else:
+                messages.error(request, "Invalid credentials")
+        else:
+            messages.error(request, "Login failed. Please check your credentials.")
 
+    return render(request, 'login.html', {'form': form})
+
+def apply_intern(request):
+    courses = CourseDuration.objects.all()
+
+    if request.method == 'POST':
+        # Get data from form
+        name = request.POST.get('name')
+        roll_no = request.POST.get('roll_no')
+        department = request.POST.get('department')
+        cgpa = request.POST.get('cgpa')
+        arrears = request.POST.get('arrears')
+        gender = request.POST.get('gender')
+        clg_mailid = request.POST.get('clg_mailid')
+        course_id = request.POST.get('course_duration')
+
+        try:
+            course = CourseDuration.objects.get(id=course_id)
+
+            # ✅ Save without attaching user (user not logged in yet)
+            InternApplication.objects.create(
+                name=name,
+                roll_no=roll_no,
+                department=department,
+                cgpa=cgpa,
+                arrears=arrears,
+                gender=gender,
+                clg_mailid=clg_mailid,
+                course_duration=course,
+                user=None  # No user yet
+            )
+
+            # ✅ Success message + redirect
+            messages.success(request, "✅ Application submitted successfully. Please login to continue.")
+            return redirect('login')
+
+        except Exception as e:
+            messages.error(request, f"❌ Error while applying: {e}")
+
+    return render(request, 'apply_for_intern.html', {'courses': courses})
 # 🔧 Helper Function
 def get_user_role(user):
     try:
         return UserRole.objects.get(user=user).role
     except UserRole.DoesNotExist:
         return None
-
-
-# ✅ LOGIN + INTERN APPLY VIEW
-def custom_login(request):
-    form = AuthenticationForm()
-    courses = CourseDuration.objects.all()
-
-    if request.method == 'POST':
-        if 'username' in request.POST:  # Login form
-            form = AuthenticationForm(request, data=request.POST)
-            if form.is_valid():
-                username = form.cleaned_data.get('username')
-                password = form.cleaned_data.get('password')
-                user = authenticate(request, username=username, password=password)
-                if user:
-                    role = get_user_role(user)
-                    if not role:
-                        messages.error(request, "User role not found.")
-                        return redirect('login')
-                    login(request, user)
-                    return redirect('admin_dashboard' if role == 'ADMIN' else 'intern_dashboard')
-                else:
-                    form.add_error(None, "Invalid credentials")
-            else:
-                messages.error(request, "Login failed. Please check credentials.")
-
-        elif 'name' in request.POST:  # Intern Application form
-            try:
-                course_id = request.POST.get('course_duration')
-                course_duration = CourseDuration.objects.get(id=course_id)
-                InternApplication.objects.create(
-                    name=request.POST.get('name'),
-                    roll_no=request.POST.get('roll_no'),
-                    department=request.POST.get('department'),
-                    cgpa=request.POST.get('cgpa'),
-                    arrears=request.POST.get('arrears'),
-                    gender=request.POST.get('gender'),
-                    clg_mailid=request.POST.get('clg_mailid'),
-                    course_duration=course_duration
-                )
-                messages.success(request, "Intern application submitted successfully.")
-                return redirect('login')
-            except Exception as e:
-                messages.error(request, f"Error submitting form: {e}")
-
-    return render(request, 'login.html', {'form': form, 'courses': courses})
-
 
 # ✅ INTERN DASHBOARD
 @login_required
@@ -98,7 +108,18 @@ def intern_dashboard(request):
     submission_count = task_reports.count()
 
     # Initialize values
-    intern_app = None
+    try:
+        intern_app = InternApplication.objects.get(user=request.user)
+    except InternApplication.DoesNotExist:
+        intern_app = None
+
+    # ✅ Show approval message only once
+    if intern_app and intern_app.just_approved:
+        messages.success(request, "🎉 You have been approved as an intern! Welcome aboard.")
+        intern_app.just_approved = False
+        intern_app.save()
+
+    # Default duration
     duration_str = "0 months"
 
     try:
@@ -108,15 +129,12 @@ def intern_dashboard(request):
     except InternApplication.DoesNotExist:
         pass
 
-    # DEBUG LOGS
-    print("📌 Duration String from DB:", duration_str)
-
     # Calculate total days
     total_days = duration_to_days(duration_str)
-    print("📌 Total Days Calculated:", total_days)
 
     # Progress
     progress = round((submission_count / total_days) * 100, 2) if total_days else 0
+    remaining = max(0, round(100 - progress, 2))
 
     # Certificate status
     is_certified = intern_app.is_certified if intern_app else False
@@ -125,12 +143,12 @@ def intern_dashboard(request):
         'form': form,
         'task_reports': task_reports,
         'progress': progress,
+        'remaining': remaining,
         'submission_count': submission_count,
         'total_days': total_days,
         'intern_app': intern_app,
         'is_certified': is_certified,
     })
-
 
 # ✅ ADMIN DASHBOARD
 @login_required
@@ -312,6 +330,7 @@ def approve_application(request, app_id):
 
     # ✅ Mark as approved
     application.is_approved = True
+    application.just_approved = True  # ✅ Add this
     application.save()
 
     # ✅ Ensure user exists
@@ -327,7 +346,7 @@ def approve_application(request, app_id):
     # ✅ Assign INTERN role
     UserRole.objects.get_or_create(user=user, role='INTERN')
 
-    # ✅ Send Approval Email with login info
+    # ✅ Send Approval Email
     send_mail(
         subject="🎉 Internship Application Approved - IPS Tech Community",
         message=f"""
@@ -350,14 +369,13 @@ If you have any questions, feel free to reach out to our team.
 Warm regards,  
 IPS Tech Community Team
 """,
-        from_email='mranjith506@gmail.com',  # 🔁 Replace with your admin email
+        from_email='mranjith506@gmail.com',
         recipient_list=[application.clg_mailid],
         fail_silently=False
     )
 
     messages.success(request, f"{application.name} is now approved as an intern!")
     return redirect('internship_applications')
-
 
 @login_required
 def reject_application(request, app_id):
@@ -395,17 +413,6 @@ IPS Tech Community Team
 
     return redirect('internship_applications')
 
-
-
-def download_certificate(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    app = get_object_or_404(InternApplication, clg_mailid=user.email)
-
-    if not app.is_certified:
-        messages.error(request, "Certificate not approved yet.")
-        return redirect('intern_detail', user_id=user_id)
-
-    return render(request, 'certificate.html', {'user': user, 'application': app})
 
 
 @login_required
@@ -469,12 +476,6 @@ def export_interns_excel(request):
     return response
 
 
-
-
-
-
-
-
 @login_required
 def download_task_reports_pdf(request):
     response = HttpResponse(content_type='application/pdf')
@@ -499,3 +500,49 @@ def download_task_reports_pdf(request):
 
     p.save()
     return response
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.http import FileResponse, Http404
+from django.conf import settings
+from PIL import Image, ImageDraw, ImageFont
+import os
+from .models import InternApplication
+
+@login_required
+def download_certificate(request):
+    user = request.user
+    intern = get_object_or_404(InternApplication, user=user)
+
+    if not intern.is_certified:
+        raise Http404("❌ Certificate not yet approved.")
+
+    name = intern.name
+
+    template_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'certificate.png')
+    font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
+    output_dir = os.path.join(settings.MEDIA_ROOT, 'certificates')
+    os.makedirs(output_dir, exist_ok=True)
+    output_path = os.path.join(output_dir, f'{user.username}_certificate.png')
+
+    if not os.path.exists(output_path):
+        try:
+            image = Image.open(template_path).convert('RGB')
+            draw = ImageDraw.Draw(image)
+            font = ImageFont.truetype(font_path, size=60)
+
+            image_width, image_height = image.size
+            text_width, text_height = draw.textsize(name, font=font)
+            x = (image_width - text_width) / 2
+            y = image_height / 2 + 100  # adjust as per your template
+
+            draw.text((x, y), name, font=font, fill=(0, 0, 0))
+            image.save(output_path)
+        except Exception as e:
+            print("Error:", e)
+            raise Http404("⚠️ Certificate generation failed.")
+
+    return FileResponse(open(output_path, 'rb'), as_attachment=True, filename=f'{user.username}_certificate.png')
+
+
+
