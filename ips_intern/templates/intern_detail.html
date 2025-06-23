@@ -59,7 +59,7 @@
       <a href="{% url 'mark_certification' intern.id 'reject' %}" class="btn btn-danger">❌ Reject Certificate</a>
     {% else %}
       <div class="alert alert-success mt-3">✅ Certificate Approved</div>
-      <a href="{% url 'download_certificate' intern.id %}" class="btn btn-outline-primary">⬇️ Download Certificate</a>
+     
     {% endif %}
   {% else %}
     <div class="alert alert-warning mt-3">⚠️ Progress not complete ({{ progress }}%). Certification approval disabled.</div>

@@ -80,14 +80,37 @@ def get_user_role(user):
         return None
 
 # ✅ INTERN DASHBOARD
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from datetime import date
+from .models import TaskReport, InternApplication
+from .forms import TaskReportForm
+
+
 @login_required
 def intern_dashboard(request):
     if get_user_role(request.user) != 'INTERN':
         return redirect('login')
 
+    # ✅ Auto-link InternApplication after login using username
+    try:
+        intern_app = InternApplication.objects.get(user=request.user)
+    except InternApplication.DoesNotExist:
+    # Try fallback based on email match (optional auto-link)
+        try:
+            intern_app = InternApplication.objects.get(clg_mailid=request.user.email)
+            if intern_app and intern_app.user is None:
+                intern_app.user = request.user
+                intern_app.save()
+        except InternApplication.DoesNotExist:
+            intern_app = None
+
+
     today = date.today()
     already_submitted = TaskReport.objects.filter(intern=request.user, date=today).exists()
 
+    # ✅ Task Submission
     if request.method == 'POST':
         if already_submitted:
             messages.warning(request, "⚠️ You’ve already submitted today’s task.")
@@ -104,14 +127,9 @@ def intern_dashboard(request):
     else:
         form = TaskReportForm()
 
+    # ✅ Submitted Tasks
     task_reports = TaskReport.objects.filter(intern=request.user).order_by('-date')
     submission_count = task_reports.count()
-
-    # Initialize values
-    try:
-        intern_app = InternApplication.objects.get(user=request.user)
-    except InternApplication.DoesNotExist:
-        intern_app = None
 
     # ✅ Show approval message only once
     if intern_app and intern_app.just_approved:
@@ -119,25 +137,21 @@ def intern_dashboard(request):
         intern_app.just_approved = False
         intern_app.save()
 
-    # Default duration
-    duration_str = "0 months"
-
-    try:
-        intern_app = InternApplication.objects.get(clg_mailid=request.user.email)
-        if intern_app.course_duration:
-            duration_str = intern_app.course_duration.duration
-    except InternApplication.DoesNotExist:
-        pass
-
-    # Calculate total days
+    # ✅ Calculate duration from intern_app
+    duration_str = intern_app.course_duration.duration if intern_app and intern_app.course_duration else "0 months"
     total_days = duration_to_days(duration_str)
 
-    # Progress
+    # ✅ Calculate Progress
     progress = round((submission_count / total_days) * 100, 2) if total_days else 0
     remaining = max(0, round(100 - progress, 2))
 
-    # Certificate status
+    # ✅ Certificate Status
     is_certified = intern_app.is_certified if intern_app else False
+
+    # ✅ Mark completed if progress hits 100%
+    if intern_app and progress >= 100 and not intern_app.is_completed:
+        intern_app.is_completed = True
+        intern_app.save()
 
     return render(request, 'intern_dashboard.html', {
         'form': form,
@@ -148,6 +162,7 @@ def intern_dashboard(request):
         'total_days': total_days,
         'intern_app': intern_app,
         'is_certified': is_certified,
+        'user_role': get_user_role(request.user),
     })
 
 # ✅ ADMIN DASHBOARD
@@ -167,6 +182,14 @@ def admin_dashboard(request):
         'pending_applications': pending_applications,
         'certified_interns': certified_interns,
     })
+
+@login_required
+def certified_interns_list(request):
+    if get_user_role(request.user) != 'ADMIN':
+        return redirect('login')
+
+    interns = InternApplication.objects.filter(is_completed=True, is_certified=True)
+    return render(request, 'certified_interns_list.html', {'interns': interns})
 
 
 # ✅ LOGOUT
@@ -416,9 +439,15 @@ IPS Tech Community Team
 
 
 @login_required
-def certified_interns_list(request):
-    interns = InternApplication.objects.filter(is_certified=True)
-    return render(request, 'certified_interns.html', {'interns': interns})
+def certified_intern_list(request):
+    if get_user_role(request.user) != 'ADMIN':
+        return redirect('login')
+
+    interns = InternApplication.objects.filter(is_completed=True, is_certified=True)
+    return render(request, 'certified_intern_list.html', {
+        'interns': interns
+    })
+
 
 @login_required
 def certified_interns_view(request):
@@ -501,26 +530,32 @@ def download_task_reports_pdf(request):
     p.save()
     return response
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
-from django.http import FileResponse, Http404
-from django.conf import settings
+
+
 from PIL import Image, ImageDraw, ImageFont
+from django.contrib.auth.decorators import login_required
+from django.http import FileResponse, Http404
+from django.shortcuts import get_object_or_404
 import os
+from django.conf import settings
 from .models import InternApplication
+
 
 @login_required
 def download_certificate(request):
     user = request.user
-    intern = get_object_or_404(InternApplication, user=user)
+    try:
+        intern = InternApplication.objects.get(user=user)
+    except InternApplication.DoesNotExist:
+        raise Http404("❌ No intern record found.")
 
     if not intern.is_certified:
         raise Http404("❌ Certificate not yet approved.")
 
     name = intern.name
 
-    template_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'certificate.png')
-    font_path = os.path.join(settings.BASE_DIR, 'static', 'fonts', 'arial.ttf')
+    template_path = os.path.join(settings.BASE_DIR, 'ips_intern', 'static', 'images', 'certificate.png')
+    font_path = os.path.join(settings.BASE_DIR, 'ips_intern', 'static', 'fonts', 'arial.ttf')
     output_dir = os.path.join(settings.MEDIA_ROOT, 'certificates')
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, f'{user.username}_certificate.png')
@@ -529,20 +564,20 @@ def download_certificate(request):
         try:
             image = Image.open(template_path).convert('RGB')
             draw = ImageDraw.Draw(image)
-            font = ImageFont.truetype(font_path, size=60)
+            font = ImageFont.truetype(font_path, size=48)
 
             image_width, image_height = image.size
-            text_width, text_height = draw.textsize(name, font=font)
+            text_bbox = draw.textbbox((0, 0), name, font=font)
+            text_width = text_bbox[2] - text_bbox[0]
             x = (image_width - text_width) / 2
-            y = image_height / 2 + 100  # adjust as per your template
+            y = image_height / 2 + 60
 
             draw.text((x, y), name, font=font, fill=(0, 0, 0))
             image.save(output_path)
+
         except Exception as e:
-            print("Error:", e)
+            print("Certificate generation error:", e)
             raise Http404("⚠️ Certificate generation failed.")
 
     return FileResponse(open(output_path, 'rb'), as_attachment=True, filename=f'{user.username}_certificate.png')
-
-
 
