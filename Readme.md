@@ -8,4 +8,4 @@ Process to get a certificate from - IPS TECH COMMUNITY
 
 PASSWORD
     1. Admin (gops) - kite@123
-    2. Student (rans) - kite@123
+    2. Student (23csb19) - intern@2025
