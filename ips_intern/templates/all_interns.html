@@ -1,41 +1,123 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>All Interns | IPS Admin</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Interns | IPS Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/all_intern.css' %}">
 </head>
 <body>
-<div class="container mt-5">
-  <h2 class="mb-4">👨‍🎓 Interns in the Community</h2>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-card fade-in">
+            <div class="header-content">
+                <h1 class="page-title">
+                    <i class="fas fa-users"></i>
+                    Intern Management
+                </h1>
+                <p class="page-subtitle">Comprehensive overview of all community interns</p>
+            </div>
+        </div>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for intern in interns %}
-      <tr>
-        <td>{{ intern.name }}</td>
-        <td>{{ intern.email }}</td>
-        <td>
-          <a href="{% url 'intern_detail' intern.id %}" class="btn btn-sm btn-primary">View</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="3" class="text-center">No interns found.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        <!-- Statistics Section -->
+        <div class="stats-section">
+            <div class="stat-card fade-in">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <h3 id="totalInterns">0</h3>
+                        <p>Total Interns</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-content">
+                    <div class="stat-info">
+                        <h3 id="activeInterns">0</h3>
+                        <p>Active Interns</p>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-  <div class="mt-4">
-    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">⬅ Back to Dashboard</a>
-  </div>
-</div>
+        <!-- Controls Section -->
+        <div class="controls-section fade-in">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search by name or email..." id="searchInput">
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-container fade-in">
+            <table class="data-table" id="internsTable">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user me-2"></i>Intern Details</th>
+                        <th><i class="fas fa-envelope me-2"></i>Contact Information</th>
+                        <th><i class="fas fa-cogs me-2"></i>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="internsTableBody">
+                    {% for intern in interns %}
+                    <tr class="intern-row">
+                        <td>
+                            <div class="intern-profile">
+                                <div class="intern-avatar">
+                                    {{ intern.name|first|upper }}
+                                </div>
+                                <div class="intern-details">
+                                    <h6>{{ intern.name }}</h6>
+                                    <p>{{ intern.department|default:"Department not specified" }}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="contact-info">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ intern.email }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="{% url 'intern_detail' intern.id %}" class="action-button">
+                                <i class="fas fa-eye"></i>
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">
+                            <div class="empty-state">
+                                <i class="fas fa-user-graduate"></i>
+                                <h5>No Interns Available</h5>
+                                <p>There are currently no interns registered in the system.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Navigation -->
+        <div class="d-flex justify-content-center fade-in">
+            <a href="{% url 'admin_dashboard' %}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/all_intern.js' %}"></script>
 </body>
 </html>
