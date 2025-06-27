@@ -20,7 +20,8 @@ urlpatterns = [
     path('applications/<int:app_id>/reject/', views.reject_application, name='reject_application'),
     path('certified_interns/', views.certified_interns_view, name='certified_interns'),
     path('export/interns/', views.export_interns_excel, name='export_interns_excel'),
-   
+    path('gender_interns/<str:gender>/', views.gender_interns_view, name='gender_interns'),
+    path('gender-interns/<str:gender>/export-excel/', views.export_gender_excel, name='export_gender_excel'),
 #interns urls
     path('intern_dashboard/', views.intern_dashboard, name='intern_dashboard'),  # Intern dashboard
     path('intern/<int:user_id>/certificate/download/', views.download_certificate, name='download_certificate'),
