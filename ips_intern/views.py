@@ -176,32 +176,30 @@ def intern_dashboard(request):
         'is_certified': is_certified,
         'user_role': get_user_role(request.user),
     })
-
 @login_required
 def admin_dashboard(request):
     if get_user_role(request.user) != 'ADMIN':
-        return redirect('login')  # Unauthorized access check
+        return redirect('login')
 
-    # ✅ Filter only approved interns
+    # Filter only approved interns
     approved_interns = InternApplication.objects.filter(is_approved=True)
 
-    total_interns = approved_interns.count()
+    total_interns = approved_interns.filter(is_certified=False).count()
     pending_applications = InternApplication.objects.filter(is_approved=False, is_rejected=False).count()
-    
-    # ✅ Only those who are both completed and certified
     certified_interns = approved_interns.filter(is_completed=True, is_certified=True).count()
-
-    # ✅ Gender count among approved interns
     male_count = approved_interns.filter(gender__iexact='male').count()
     female_count = approved_interns.filter(gender__iexact='female').count()
 
     return render(request, 'admin_dashboard.html', {
+        'admin_name': request.user.first_name or request.user.username,  # 👈 add this line
         'total_interns': total_interns,
         'pending_applications': pending_applications,
         'certified_interns': certified_interns,
         'male_count': male_count,
         'female_count': female_count,
     })
+
+
 
 @login_required
 def gender_interns_view(request, gender):
@@ -261,12 +259,17 @@ def all_interns_view(request):
         return redirect('login')
 
     intern_roles = UserRole.objects.filter(role='INTERN').select_related('user')
-    
+
     intern_data = []
     for role in intern_roles:
         user = role.user
         try:
             application = InternApplication.objects.get(clg_mailid=user.email)
+
+            # ✅ Skip certified interns
+            if application.is_certified:
+                continue
+
             intern_data.append({
                 'id': user.id,
                 'name': application.name,
@@ -274,12 +277,8 @@ def all_interns_view(request):
                 'department': application.department,
             })
         except InternApplication.DoesNotExist:
-            intern_data.append({
-                'id': user.id,
-                'name': user.username,
-                'email': user.email,
-                'department': 'Not Available',
-            })
+            # ✅ Skip interns without application
+            continue
 
     return render(request, 'all_interns.html', {
         'interns': intern_data
