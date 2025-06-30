@@ -7,7 +7,299 @@
     <title>All Interns | IPS Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/all_intern.css' %}">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #212529;
+        }
+        .main-container {
+            max-width: 1400px;
+            margin: clamp(1rem, 3vw, 1.5rem) auto;
+            padding: 0 clamp(0.75rem, 2vw, 1rem);
+        }
+        .header-card {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            border-radius: 12px;
+            padding: clamp(1rem, 3vw, 1.5rem);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        }
+        .page-title {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .page-title i {
+            margin-right: 0.5rem;
+        }
+        .page-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            opacity: 0.9;
+        }
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: clamp(0.75rem, 2vw, 1rem);
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        }
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: clamp(0.75rem, 2vw, 1rem);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .stat-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-info h3 {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            font-weight: 700;
+            color: #007bff;
+            margin: 0;
+        }
+        .stat-info p {
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            color: #6c757d;
+            margin: 0;
+        }
+        .stat-icon i {
+            font-size: clamp(1.8rem, 4vw, 2.2rem);
+            color: #007bff;
+            opacity: 0.2;
+        }
+        .controls-section {
+            margin-bottom: clamp(1rem, 3vw, 1.5rem);
+        }
+        .search-container {
+            position: relative;
+            max-width: 100%;
+            width: clamp(300px, 50vw, 400px);
+        }
+        .search-input {
+            padding-left: 2.5rem;
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            box-shadow: none;
+            transition: border-color 0.3s ease;
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+        }
+        .search-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 0.75rem;
+            transform: translateY(-50%);
+            color: #6c757d;
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+        }
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .data-table {
+            width: 100%;
+            margin-bottom: 0;
+        }
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            padding: clamp(0.5rem, 2vw, 0.75rem);
+            color: #343a40;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        .data-table td {
+            vertical-align: middle;
+            padding: clamp(0.5rem, 2vw, 0.75rem);
+        }
+        .intern-row {
+            transition: background-color 0.3s ease;
+        }
+        .intern-row:hover {
+            background-color: #f1f3f5;
+        }
+        .intern-profile {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 2vw, 0.75rem);
+        }
+        .intern-avatar {
+            width: clamp(32px, 8vw, 36px);
+            height: clamp(32px, 8vw, 36px);
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        }
+        .intern-details h6 {
+            margin: 0;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            font-weight: 600;
+        }
+        .intern-details .department-badge {
+            margin-top: 0.25rem;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            color: #fff;
+            background-color: #6c757d;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+        }
+        .contact-info i {
+            color: #007bff;
+        }
+        .action-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #007bff;
+            color: white;
+            border-radius: 8px;
+            padding: clamp(0.4rem, 2vw, 0.5rem) clamp(0.8rem, 2vw, 1rem);
+            text-decoration: none;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            transition: background-color 0.3s ease;
+        }
+        .action-button:hover {
+            background: #0056b3;
+            color: white;
+        }
+        .empty-state {
+            text-align: center;
+            padding: clamp(1.5rem, 4vw, 2rem);
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: clamp(1.8rem, 4vw, 2rem);
+            margin-bottom: 1rem;
+        }
+        .empty-state h5 {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-weight: 600;
+        }
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #6c757d;
+            color: white;
+            border-radius: 8px;
+            padding: clamp(0.5rem, 2vw, 0.75rem) clamp(1rem, 2vw, 1.25rem);
+            text-decoration: none;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background: #5a6268;
+            color: white;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .intern-card {
+            display: none;
+            background: white;
+            border-radius: 10px;
+            padding: clamp(0.75rem, 2vw, 1rem);
+            margin-bottom: clamp(0.75rem, 2vw, 1rem);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .intern-card:hover {
+            transform: translateY(-5px);
+        }
+        .intern-card .intern-profile {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .intern-card .contact-info {
+            margin: 0.5rem 0;
+        }
+        @media (max-width: 768px) {
+            .data-table {
+                display: none;
+            }
+            .intern-card {
+                display: block;
+            }
+            .stats-section {
+                grid-template-columns: 1fr;
+            }
+            .search-container {
+                width: 100%;
+            }
+            .intern-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+        }
+        @media (min-width: 769px) {
+            .intern-card {
+                display: none;
+            }
+        }
+        @media (max-width: 576px) {
+            .header-card {
+                padding: clamp(0.75rem, 2vw, 1rem);
+            }
+            .page-title {
+                font-size: clamp(1.3rem, 4vw, 1.5rem);
+            }
+            .page-subtitle {
+                font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+            }
+            .stat-card {
+                padding: clamp(0.5rem, 2vw, 0.75rem);
+            }
+            .stat-info h3 {
+                font-size: clamp(1.3rem, 4vw, 1.5rem);
+            }
+            .stat-icon i {
+                font-size: clamp(1.5rem, 4vw, 1.8rem);
+            }
+        }
+        @media (min-width: 992px) {
+            .main-container {
+                padding: 0 1.5rem;
+            }
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="main-container">
@@ -16,7 +308,7 @@
             <div class="header-content">
                 <h1 class="page-title">
                     <i class="fas fa-users"></i>
-                    Intern Management
+                    Interns list
                 </h1>
                 <p class="page-subtitle">Comprehensive overview of all community interns</p>
             </div>
@@ -27,7 +319,7 @@
             <div class="stat-card fade-in">
                 <div class="stat-content">
                     <div class="stat-info">
-                        <h3 id="totalInterns">0</h3>
+                        <h3 id="totalInterns">{{ interns|length }}</h3>
                         <p>Total Interns</p>
                     </div>
                     <div class="stat-icon">
@@ -38,7 +330,7 @@
             <div class="stat-card fade-in">
                 <div class="stat-content">
                     <div class="stat-info">
-                        <h3 id="activeInterns">0</h3>
+                        <h3 id="activeInterns">{{ interns|length }}</h3>
                         <p>Active Interns</p>
                     </div>
                     <div class="stat-icon">
@@ -52,7 +344,7 @@
         <div class="controls-section fade-in">
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Search by name or email..." id="searchInput">
+                <input type="text" class="search-input form-control" placeholder="Search by name or email..." id="searchInput">
             </div>
         </div>
 
@@ -76,7 +368,7 @@
                                 </div>
                                 <div class="intern-details">
                                     <h6>{{ intern.name }}</h6>
-                                    <p>{{ intern.department|default:"Department not specified" }}</p>
+                                    <span class="department-badge">{{ intern.department|default:"Department not specified" }}</span>
                                 </div>
                             </div>
                         </td>
@@ -106,10 +398,40 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <!-- Mobile Card View -->
+            {% for intern in interns %}
+            <div class="intern-card fade-in">
+                <div class="intern-profile">
+                    <div class="intern-avatar">
+                        {{ intern.name|first|upper }}
+                    </div>
+                    <div class="intern-details">
+                        <h6>{{ intern.name }}</h6>
+                        <span class="department-badge">{{ intern.department|default:"Department not specified" }}</span>
+                    </div>
+                </div>
+                <div class="contact-info">
+                    <i class="fas fa-envelope"></i>
+                    <span>{{ intern.email }}</span>
+                </div>
+                <a href="{% url 'intern_detail' intern.id %}" class="action-button">
+                    <i class="fas fa-eye"></i>
+                    View Details
+                </a>
+            </div>
+            {% empty %}
+            <div class="intern-card fade-in">
+                <div class="empty-state">
+                    <i class="fas fa-user-graduate"></i>
+                    <h5>No Interns Available</h5>
+                    <p>There are currently no interns registered in the system.</p>
+                </div>
+            </div>
+            {% endfor %}
         </div>
 
         <!-- Navigation -->
-        <div class="d-flex justify-content-center fade-in">
+        <div class="d-flex justify-content-center fade-in mt-4">
             <a href="{% url 'admin_dashboard' %}" class="back-button">
                 <i class="fas fa-arrow-left"></i>
                 Back to Dashboard
@@ -118,6 +440,32 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/all_intern.js' %}"></script>
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#internsTableBody .intern-row');
+            const cards = document.querySelectorAll('.intern-card');
+
+            rows.forEach(row => {
+                const name = row.querySelector('.intern-details h6').textContent.toLowerCase();
+                const email = row.querySelector('.contact-info span').textContent.toLowerCase();
+                row.style.display = name.includes(searchTerm) || email.includes(searchTerm) ? '' : 'none';
+            });
+
+            cards.forEach(card => {
+                const name = card.querySelector('.intern-details h6')?.textContent.toLowerCase();
+                const email = card.querySelector('.contact-info span')?.textContent.toLowerCase();
+                card.style.display = (name && email && (name.includes(searchTerm) || email.includes(searchTerm))) ? '' : 'none';
+            });
+        });
+
+        // Update stats dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalInterns = document.querySelectorAll('#internsTableBody .intern-row').length;
+            document.getElementById('totalInterns').textContent = totalInterns;
+            document.getElementById('activeInterns').textContent = totalInterns; // Assuming all listed interns are active
+        });
+    </script>
 </body>
 </html>

@@ -42,6 +42,7 @@ class InternApplication(models.Model):
     is_rejected = models.BooleanField(default=False)
     is_certified = models.BooleanField(default=False)
     just_approved = models.BooleanField(default=False)
+    date_applied = models.DateTimeField(auto_now_add=True)
 
     approved_at = models.DateTimeField(null=True, blank=True)  # ⏳ Used for tracking duration start
 

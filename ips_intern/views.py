@@ -255,7 +255,6 @@ def duration_to_days(duration_str):
     return 0
 
 
-
 @login_required
 def all_interns_view(request):
     if get_user_role(request.user) != 'ADMIN':
@@ -268,15 +267,19 @@ def all_interns_view(request):
         user = role.user
         try:
             application = InternApplication.objects.get(clg_mailid=user.email)
-            name = application.name
+            intern_data.append({
+                'id': user.id,
+                'name': application.name,
+                'email': user.email,
+                'department': application.department,
+            })
         except InternApplication.DoesNotExist:
-            name = user.username  # fallback
-        
-        intern_data.append({
-            'id': user.id,
-            'name': name,
-            'email': user.email,
-        })
+            intern_data.append({
+                'id': user.id,
+                'name': user.username,
+                'email': user.email,
+                'department': 'Not Available',
+            })
 
     return render(request, 'all_interns.html', {
         'interns': intern_data
