@@ -177,21 +177,23 @@ def intern_dashboard(request):
         'user_role': get_user_role(request.user),
     })
 
-# ✅ ADMIN DASHBOARD
 @login_required
 def admin_dashboard(request):
     if get_user_role(request.user) != 'ADMIN':
         return redirect('login')  # Unauthorized access check
 
-    total_interns = UserRole.objects.filter(role='INTERN').count()
+    # ✅ Filter only approved interns
+    approved_interns = InternApplication.objects.filter(is_approved=True)
+
+    total_interns = approved_interns.count()
     pending_applications = InternApplication.objects.filter(is_approved=False, is_rejected=False).count()
     
-    # ✅ Only those who completed + certified
-    certified_interns = InternApplication.objects.filter(is_completed=True, is_certified=True).count()
+    # ✅ Only those who are both completed and certified
+    certified_interns = approved_interns.filter(is_completed=True, is_certified=True).count()
 
-    # ✅ Gender counts
-    male_count = InternApplication.objects.filter(gender__iexact='male').count()
-    female_count = InternApplication.objects.filter(gender__iexact='female').count()
+    # ✅ Gender count among approved interns
+    male_count = approved_interns.filter(gender__iexact='male').count()
+    female_count = approved_interns.filter(gender__iexact='female').count()
 
     return render(request, 'admin_dashboard.html', {
         'total_interns': total_interns,
