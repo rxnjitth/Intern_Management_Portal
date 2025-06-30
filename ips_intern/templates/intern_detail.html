@@ -1,73 +1,168 @@
+
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>{{ intern.username }} | Intern Details</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ intern.username }} | Intern Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/intern_detail.css' %}">
 </head>
 <body>
-<div class="container mt-5">
-  <h2 class="mb-4">📝 Intern Profile: {{ intern.username }}</h2>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-card fade-in">
+            <h1 class="page-title">
+                <i class="fas fa-user-graduate"></i>
+                Intern Profile: {{ intern.username }}
+            </h1>
+        </div>
 
-  <table class="table table-bordered">
-    <tr><th>Username</th><td>{{ intern.username }}</td></tr>
-    <tr><th>Email</th><td>{{ intern.email }}</td></tr>
-    {% if application %}
-    <tr><th>Roll No</th><td>{{ application.roll_no }}</td></tr>
-    <tr><th>Department</th><td>{{ application.department }}</td></tr>
-    <tr><th>CGPA</th><td>{{ application.cgpa }}</td></tr>
-    <tr><th>Arrears</th><td>{{ application.arrears }}</td></tr>
-    <tr><th>Course Duration</th><td>{{ application.course_duration }}</td></tr>
-    {% else %}
-    <tr><td colspan="2">No application found for this user.</td></tr>
-    {% endif %}
-  </table>
+        <!-- Profile Section -->
+        <div class="profile-section fade-in">
+            <h4><i class="fas fa-user me-2"></i>Profile Details</h4>
+            <table class="data-table">
+                <tr>
+                    <th>Username</th>
+                    <td>{{ intern.username }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ intern.email }}</td>
+                </tr>
+                {% if application %}
+                <tr>
+                    <th>Roll No</th>
+                    <td>{{ application.roll_no }}</td>
+                </tr>
+                <tr>
+                    <th>Department</th>
+                    <td><span class="department-badge">{{ application.department|default:"Department not specified" }}</span></td>
+                </tr>
+                <tr>
+                    <th>CGPA</th>
+                    <td>{{ application.cgpa }}</td>
+                </tr>
+                <tr>
+                    <th>Arrears</th>
+                    <td>{{ application.arrears }}</td>
+                </tr>
+                <tr>
+                    <th>Course Duration</th>
+                    <td>{{ application.course_duration }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2" class="text-center text-muted">
+                        <i class="fas fa-exclamation-circle me-2"></i>No application found for this user.
+                    </td>
+                </tr>
+                {% endif %}
+            </table>
+            <!-- Mobile Card View -->
+            <div class="profile-card">
+                <div class="profile-card-item">
+                    <label>Username</label>
+                    <span>{{ intern.username }}</span>
+                </div>
+                <div class="profile-card-item">
+                    <label>Email</label>
+                    <span>{{ intern.email }}</span>
+                </div>
+                {% if application %}
+                <div class="profile-card-item">
+                    <label>Roll No</label>
+                    <span>{{ application.roll_no }}</span>
+                </div>
+                <div class="profile-card-item">
+                    <label>Department</label>
+                    <span class="department-badge">{{ application.department|default:"Department not specified" }}</span>
+                </div>
+                <div class="profile-card-item">
+                    <label>CGPA</label>
+                    <span>{{ application.cgpa }}</span>
+                </div>
+                <div class="profile-card-item">
+                    <label>Arrears</label>
+                    <span>{{ application.arrears }}</span>
+                </div>
+                <div class="profile-card-item">
+                    <label>Course Duration</label>
+                    <span>{{ application.course_duration }}</span>
+                </div>
+                {% else %}
+                <div class="profile-card-item text-center text-muted">
+                    <i class="fas fa-exclamation-circle me-2"></i>No application found for this user.
+                </div>
+                {% endif %}
+            </div>
+        </div>
 
-  <hr class="my-4">
-  <h4>📊 Task Progress</h4>
-  <div class="mb-3">
-    <label>Progress:</label>
-    <div class="progress">
-      <div class="progress-bar bg-success" role="progressbar"
-           style="width: {{ progress }}%;" aria-valuenow="{{ progress }}"
-           aria-valuemin="0" aria-valuemax="100">
-        {{ progress }}%
-      </div>
+        <!-- Task Progress Section -->
+        <div class="task-section fade-in">
+            <h4><i class="fas fa-chart-bar me-2"></i>Task Progress</h4>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar"
+                     style="width: {{ progress }}%;" aria-valuenow="{{ progress }}"
+                     aria-valuemin="0" aria-valuemax="100">
+                    {{ progress }}%
+                </div>
+            </div>
+            <small class="progress-text">{{ submission_count }} submitted / {{ total_days }} total days</small>
+        </div>
+
+        <!-- Submitted Tasks Section -->
+        <div class="task-section fade-in">
+            <h4><i class="fas fa-tasks me-2"></i>Submitted Tasks</h4>
+            {% if task_reports %}
+            <div class="task-list">
+                <div class="list-group">
+                    {% for task in task_reports %}
+                    <div class="list-group-item task-item">
+                        <strong>{{ task.date }}:</strong> {{ task.topic|truncatechars:80 }}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <p class="text-muted"><i class="fas fa-info-circle me-2"></i>No task reports submitted yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Certification Status Section -->
+        <div class="certification-section fade-in">
+            <h4><i class="fas fa-certificate me-2"></i>Certification Status</h4>
+            {% if progress == 100 %}
+                {% if not application.is_certified %}
+                <p>Progress Completed ✅. Review and approve certification:</p>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'mark_certification' intern.id 'approve' %}" class="action-button approve">
+                        <i class="fas fa-check"></i> Approve Certificate
+                    </a>
+                    <a href="{% url 'mark_certification' intern.id 'reject' %}" class="action-button reject">
+                        <i class="fas fa-times"></i> Reject Certificate
+                    </a>
+                </div>
+                {% else %}
+                <div class="alert alert-success mt-3" role="alert">
+                    <i class="fas fa-check-circle me-2"></i>Certificate Approved
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="alert alert-warning mt-3" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>Progress not complete ({{ progress }}%). Certification approval disabled.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Navigation -->
+        <div class="d-flex justify-content-center fade-in mt-4">
+            <a href="{% url 'all_interns' %}" class="action-button back">
+                <i class="fas fa-arrow-left"></i> Back to Interns List
+            </a>
+        </div>
     </div>
-    <small class="text-muted">{{ submission_count }} submitted / {{ total_days }} total days</small>
-  </div>
 
-  <hr class="my-4">
-  <h4>📅 Submitted Tasks</h4>
-  {% if task_reports %}
-    <ul class="list-group">
-      {% for task in task_reports %}
-        <li class="list-group-item">
-          <strong>{{ task.date }}:</strong> {{ task.topic|truncatechars:80 }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">No task reports submitted yet.</p>
-  {% endif %}
-
-  <hr class="my-4">
-  <h4>🎓 Certification Status</h4>
-  {% if progress == 100 %}
-    {% if not application.is_certified %}
-      <p>Progress Completed ✅. Review and approve certification:</p>
-      <a href="{% url 'mark_certification' intern.id 'approve' %}" class="btn btn-success me-2">✅ Approve Certificate</a>
-      <a href="{% url 'mark_certification' intern.id 'reject' %}" class="btn btn-danger">❌ Reject Certificate</a>
-    {% else %}
-      <div class="alert alert-success mt-3">✅ Certificate Approved</div>
-     
-    {% endif %}
-  {% else %}
-    <div class="alert alert-warning mt-3">⚠️ Progress not complete ({{ progress }}%). Certification approval disabled.</div>
-  {% endif %}
-
-  <div class="mt-4">
-    <a href="{% url 'all_interns' %}" class="btn btn-outline-secondary">⬅ Back to Interns List</a>
-  </div>
-</div>
-</body>
-</html>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -88,16 +88,26 @@ from .models import TaskReport, InternApplication
 from .forms import TaskReportForm
 
 
+from datetime import date, timedelta
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import InternApplication, TaskReport
+from .forms import TaskReportForm
+ # Update path if different
+
 @login_required
 def intern_dashboard(request):
     if get_user_role(request.user) != 'INTERN':
         return redirect('login')
 
-    # ✅ Auto-link InternApplication after login using username
+    today = date.today()
+    already_submitted = TaskReport.objects.filter(intern=request.user, date=today).exists()
+
+    # ✅ Auto-link InternApplication by user/email fallback
     try:
         intern_app = InternApplication.objects.get(user=request.user)
     except InternApplication.DoesNotExist:
-    # Try fallback based on email match (optional auto-link)
         try:
             intern_app = InternApplication.objects.get(clg_mailid=request.user.email)
             if intern_app and intern_app.user is None:
@@ -106,14 +116,22 @@ def intern_dashboard(request):
         except InternApplication.DoesNotExist:
             intern_app = None
 
+    # ✅ Course Duration Restriction Logic
+    duration_str = intern_app.course_duration.duration if intern_app and intern_app.course_duration else "0 months"
+    total_days = duration_to_days(duration_str)
 
-    today = date.today()
-    already_submitted = TaskReport.objects.filter(intern=request.user, date=today).exists()
+    start_date = intern_app.approved_at.date() if intern_app and intern_app.approved_at else None
+    end_date = start_date + timedelta(days=total_days) if start_date else None
+    is_duration_over = end_date and today > end_date
 
     # ✅ Task Submission
     if request.method == 'POST':
         if already_submitted:
             messages.warning(request, "⚠️ You’ve already submitted today’s task.")
+            return redirect('intern_dashboard')
+
+        if is_duration_over:
+            messages.error(request, "❌ Your internship duration is over. You can’t submit further tasks.")
             return redirect('intern_dashboard')
 
         form = TaskReportForm(request.POST)
@@ -127,28 +145,22 @@ def intern_dashboard(request):
     else:
         form = TaskReportForm()
 
-    # ✅ Submitted Tasks
+    # ✅ Task List & Progress
     task_reports = TaskReport.objects.filter(intern=request.user).order_by('-date')
     submission_count = task_reports.count()
+    progress = round((submission_count / total_days) * 100, 2) if total_days else 0
+    remaining = max(0, round(100 - progress, 2))
 
-    # ✅ Show approval message only once
+    # ✅ Show approval message once
     if intern_app and intern_app.just_approved:
         messages.success(request, "🎉 You have been approved as an intern! Welcome aboard.")
         intern_app.just_approved = False
         intern_app.save()
 
-    # ✅ Calculate duration from intern_app
-    duration_str = intern_app.course_duration.duration if intern_app and intern_app.course_duration else "0 months"
-    total_days = duration_to_days(duration_str)
-
-    # ✅ Calculate Progress
-    progress = round((submission_count / total_days) * 100, 2) if total_days else 0
-    remaining = max(0, round(100 - progress, 2))
-
-    # ✅ Certificate Status
+    # ✅ Certification Status
     is_certified = intern_app.is_certified if intern_app else False
 
-    # ✅ Mark completed if progress hits 100%
+    # ✅ Auto-mark completed
     if intern_app and progress >= 100 and not intern_app.is_completed:
         intern_app.is_completed = True
         intern_app.save()
@@ -165,22 +177,41 @@ def intern_dashboard(request):
         'user_role': get_user_role(request.user),
     })
 
-# ✅ ADMIN DASHBOARD
 @login_required
 def admin_dashboard(request):
     if get_user_role(request.user) != 'ADMIN':
         return redirect('login')  # Unauthorized access check
 
-    total_interns = UserRole.objects.filter(role='INTERN').count()
+    # ✅ Filter only approved interns
+    approved_interns = InternApplication.objects.filter(is_approved=True)
+
+    total_interns = approved_interns.count()
     pending_applications = InternApplication.objects.filter(is_approved=False, is_rejected=False).count()
     
-    # ✅ Only those who completed + certified
-    certified_interns = InternApplication.objects.filter(is_completed=True, is_certified=True).count()
+    # ✅ Only those who are both completed and certified
+    certified_interns = approved_interns.filter(is_completed=True, is_certified=True).count()
+
+    # ✅ Gender count among approved interns
+    male_count = approved_interns.filter(gender__iexact='male').count()
+    female_count = approved_interns.filter(gender__iexact='female').count()
 
     return render(request, 'admin_dashboard.html', {
         'total_interns': total_interns,
         'pending_applications': pending_applications,
         'certified_interns': certified_interns,
+        'male_count': male_count,
+        'female_count': female_count,
+    })
+
+@login_required
+def gender_interns_view(request, gender):
+    if get_user_role(request.user) != 'ADMIN':
+        return redirect('login')
+
+    interns = InternApplication.objects.filter(gender__iexact=gender)
+    return render(request, 'gender_intern_list.html', {
+        'gender': gender,
+        'interns': interns
     })
 
 @login_required
@@ -224,7 +255,6 @@ def duration_to_days(duration_str):
     return 0
 
 
-
 @login_required
 def all_interns_view(request):
     if get_user_role(request.user) != 'ADMIN':
@@ -237,15 +267,19 @@ def all_interns_view(request):
         user = role.user
         try:
             application = InternApplication.objects.get(clg_mailid=user.email)
-            name = application.name
+            intern_data.append({
+                'id': user.id,
+                'name': application.name,
+                'email': user.email,
+                'department': application.department,
+            })
         except InternApplication.DoesNotExist:
-            name = user.username  # fallback
-        
-        intern_data.append({
-            'id': user.id,
-            'name': name,
-            'email': user.email,
-        })
+            intern_data.append({
+                'id': user.id,
+                'name': user.username,
+                'email': user.email,
+                'department': 'Not Available',
+            })
 
     return render(request, 'all_interns.html', {
         'interns': intern_data
@@ -528,6 +562,52 @@ def download_task_reports_pdf(request):
             y = 800
 
     p.save()
+    return response
+
+# assuming this is your role check helper
+
+@login_required
+def export_gender_excel(request, gender):
+    if get_user_role(request.user) != 'ADMIN':
+        return redirect('login')
+
+    # Filter interns by gender (case-insensitive)
+    interns = InternApplication.objects.filter(gender__iexact=gender).values(
+        'name', 'roll_no', 'department', 'clg_mailid', 'cgpa', 'arrears',
+        'course_duration__duration', 'is_approved', 'is_rejected', 'is_certified'
+    )
+
+    if not interns.exists():
+        return HttpResponse("No data available for this gender.", content_type="text/plain")
+
+    # Convert to DataFrame
+    df = pd.DataFrame(interns)
+    df.rename(columns={
+        'name': 'Name',
+        'roll_no': 'Roll Number',
+        'department': 'Department',
+        'clg_mailid': 'Email',
+        'cgpa': 'CGPA',
+        'arrears': 'Arrears',
+        'course_duration__duration': 'Course Duration',
+        'is_approved': 'Approved',
+        'is_rejected': 'Rejected',
+        'is_certified': 'Certified'
+    }, inplace=True)
+
+    # Format boolean fields
+    df['Approved'] = df['Approved'].apply(lambda x: 'Yes' if x else 'No')
+    df['Rejected'] = df['Rejected'].apply(lambda x: 'Yes' if x else 'No')
+    df['Certified'] = df['Certified'].apply(lambda x: 'Yes' if x else 'No')
+
+    # HTTP Response setup
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    filename = f"{gender.lower()}_interns.xlsx"
+    response['Content-Disposition'] = f'attachment; filename={filename}'
+
+    # Write Excel
+    df.to_excel(response, index=False)
+
     return response
 
 
