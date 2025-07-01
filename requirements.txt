@@ -1,0 +1,16 @@
+# --- Core Django Framework ---
+Django==5.2.3
+
+# --- PDF Generation ---
+reportlab==4.4.2          # For generating PDFs like internship letters, certificates
+
+# --- Excel & Data Processing ---
+pandas==2.3.0             # For handling tabular data (e.g., intern lists)
+openpyxl==3.1.5           # For Excel file (.xlsx) export
+et_xmlfile==2.0.0         # Used by openpyxl internally
+
+# --- Image Processing ---
+Pillow==11.2.1            # For image support (e.g., adding logos to PDFs)
+
+
+
