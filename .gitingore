@@ -1,0 +1,8 @@
+# Ignore virtual environment
+venv/
+
+# Ignore database
+db.sqlite3
+
+# Ignore media certificate files
+media/certificates/
