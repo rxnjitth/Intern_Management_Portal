@@ -16,5 +16,5 @@ gunicorn==21.2.0
 pymysql==1.1.1
 cryptography>=42.0.0
 python-dotenv
-
+whitenoise>=6.0
 

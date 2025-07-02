@@ -31,7 +31,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-fallback-dev-key')
 DEBUG = False
 
-ALLOWED_HOSTS = ['internportal.up.railway.app']
+ALLOWED_HOSTS = ['internportal.up.railway.app', 
+                 'localhost', 
+                 '127.0.0.1']
 
 
 
@@ -56,8 +58,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ROOT_URLCONF = 'intern_site.urls'
 
 TEMPLATES = [
@@ -135,7 +138,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'ips_intern/static'),  # Correct path
+     BASE_DIR / 'ips_intern/static',  # Correct path
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 # Default primary key field type
