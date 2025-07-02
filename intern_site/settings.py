@@ -146,7 +146,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://internportal.up.railway.app',
+    'http://internportal.up.railway.app',
+]
 
+# If using HTTPS (which Railway does)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
 # settings.py
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
