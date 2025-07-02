@@ -12,5 +12,8 @@ et_xmlfile==2.0.0         # Used by openpyxl internally
 # --- Image Processing ---
 Pillow==11.2.1            # For image support (e.g., adding logos to PDFs)
 
+gunicorn==21.2.0
+pymysql==1.1.1
+cryptography>=42.0.0
 
 
