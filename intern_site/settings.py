@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-wtvngfbeqs7-1@sex(dsktcs51cu&e2w(n^ltw83u38bk0cyul
 # SECURITY WARNING: don't run with debug turned on in production!
 
 import os
+from pathlib import Path
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-fallback-dev-key')
 DEBUG = False
 
@@ -133,7 +135,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / 'ips_intern/static',
+    os.path.join(BASE_DIR, 'ips_intern/static'),  # Correct path
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 # Default primary key field type
