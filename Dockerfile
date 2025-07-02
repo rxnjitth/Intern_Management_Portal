@@ -14,6 +14,7 @@ COPY . .
 
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
+RUN echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python manage.py shell
 
 
 # Replace CMD or ENTRYPOINT with this:
