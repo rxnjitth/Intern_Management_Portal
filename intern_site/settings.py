@@ -23,13 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wtvngfbeqs7-1@sex(dsktcs51cu&e2w(n^ltw83u38bk0cyul'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 import os
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-fallback-dev-key')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+DEBUG = False
+
+ALLOWED_HOSTS = ['internportal.up.railway.app']
+
 
 
 
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'intern_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-import os
+
 
 DATABASES = {
     'default': {
