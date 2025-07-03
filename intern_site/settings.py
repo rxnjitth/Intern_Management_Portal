@@ -172,5 +172,7 @@ from django.db.backends.mysql.base import DatabaseWrapper
 DatabaseWrapper.mysql_server_info = property(lambda self: "8.0.32")
 DatabaseWrapper.mysql_server_data = {
     "version": "8.0.32",
-    "default_storage_engine": "InnoDB"
+    "default_storage_engine": "InnoDB",
+    "sql_mode": "STRICT_TRANS_TABLES"
+    
 }
