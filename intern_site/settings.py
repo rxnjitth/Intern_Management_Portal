@@ -165,12 +165,12 @@ EMAIL_HOST_USER = 'mranjith2506@gmail.com'      # 🔁 Use your admin mail
 EMAIL_HOST_PASSWORD = 'jvtg emtr nwei rzim'     # 🔁 App Password (not your real password)
 
 
-# Fix crash on MySQL UUID check
 import django.db.backends.mysql.base as mysql_base
 mysql_base.DatabaseFeatures.has_native_uuid_field = False
 
 from django.db.backends.mysql.base import DatabaseWrapper
-
-# Monkey patch MariaDB version check to avoid crashing
 DatabaseWrapper.mysql_server_info = property(lambda self: "mysql 8.0.32")
-DatabaseWrapper.mysql_server_data = {"version": "8.0.32"}
+DatabaseWrapper.mysql_server_data = {
+    "version": "8.0.32",
+    "default_storage_engine": "InnoDB"
+}
