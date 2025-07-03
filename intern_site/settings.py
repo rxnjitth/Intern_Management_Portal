@@ -165,3 +165,6 @@ EMAIL_HOST_USER = 'mranjith2506@gmail.com'      # 🔁 Use your admin mail
 EMAIL_HOST_PASSWORD = 'jvtg emtr nwei rzim'     # 🔁 App Password (not your real password)
 
 
+# Fix crash on MySQL UUID check
+import django.db.backends.mysql.base as mysql_base
+mysql_base.DatabaseFeatures.has_native_uuid_field = False
