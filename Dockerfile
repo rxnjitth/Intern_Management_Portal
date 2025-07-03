@@ -15,8 +15,6 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy entrypoint script
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN python manage.py collectstatic --noinput
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["gunicorn", "intern_site.wsgi:application", "--bind", "0.0.0.0:8000"]

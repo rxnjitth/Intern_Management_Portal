@@ -23,19 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-wtvngfbeqs7-1@sex(dsktcs51cu&e2w(n^ltw83u38bk0cyul'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
 
-import os
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'your-fallback-dev-key')
-DEBUG = False
-
-ALLOWED_HOSTS = ['internportal.up.railway.app', 
-                 'localhost', 
-                 '127.0.0.1']
-
-
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -58,9 +48,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 ROOT_URLCONF = 'intern_site.urls'
 
 TEMPLATES = [
@@ -84,7 +73,7 @@ WSGI_APPLICATION = 'intern_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-
+import os
 
 DATABASES = {
     'default': {
@@ -92,7 +81,7 @@ DATABASES = {
         'NAME': os.environ.get('MYSQL_DATABASE'),
         'USER': os.environ.get('MYSQL_USER'),
         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
-        'HOST': os.environ.get('MYSQL_HOST'),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
         'PORT': os.environ.get('MYSQL_PORT', '3306'),
     }
 }
@@ -138,7 +127,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-     BASE_DIR / 'ips_intern/static',  # Correct path
+    BASE_DIR / 'ips_intern/static',
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 # Default primary key field type
@@ -146,15 +135,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CSRF settings
-CSRF_TRUSTED_ORIGINS = [
-    'https://internportal.up.railway.app',
-    'http://internportal.up.railway.app',
-]
 
-# If using HTTPS (which Railway does)
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT = True
 # settings.py
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -164,15 +145,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'mranjith2506@gmail.com'      # 🔁 Use your admin mail
 EMAIL_HOST_PASSWORD = 'jvtg emtr nwei rzim'     # 🔁 App Password (not your real password)
 
-
-import django.db.backends.mysql.base as mysql_base
-mysql_base.DatabaseFeatures.has_native_uuid_field = False
-
-from django.db.backends.mysql.base import DatabaseWrapper
-DatabaseWrapper.mysql_server_info = property(lambda self: "8.0.32")
-DatabaseWrapper.mysql_server_data = {
-    "version": "8.0.32",
-    "default_storage_engine": "InnoDB",
-    "sql_mode": "STRICT_TRANS_TABLES"
-    
-}
