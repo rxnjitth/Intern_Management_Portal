@@ -29,6 +29,9 @@ ALLOWED_HOSTS = ["intern.up.railway.app",
                  "localhost",
                  "127.0.0.1"]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://intern.up.railway.app"
+]
 
 # Application definition
 
@@ -80,16 +83,14 @@ import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("MYSQLDATABASE"),
-        'USER': os.getenv("MYSQLUSER"),
-        'PASSWORD': os.getenv("MYSQLPASSWORD"),
-        'HOST': os.getenv("MYSQLHOST"),
-        'PORT': os.getenv("MYSQLPORT", "3306"),
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        }
+        'NAME': os.environ.get('MYSQLDATABASE'),        # ✅ Matches Railway
+        'USER': os.environ.get('MYSQLUSER'),
+        'PASSWORD': os.environ.get('MYSQLPASSWORD'),
+        'HOST': os.environ.get('MYSQLHOST'),            # ✅ Fixes your current crash
+        'PORT': os.environ.get('MYSQLPORT', '3306'),
     }
 }
+
 
 
 # Password validation
