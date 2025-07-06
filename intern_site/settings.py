@@ -18,24 +18,14 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load .env if running locally (optional)
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: don't expose secret key in code
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-development-key")
-
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "insecure-dev-key")
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    "intern.up.railway.app",
-]
-
-
-# Application definition
+ALLOWED_HOSTS = ["intern.up.railway.app", "localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -76,25 +66,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'intern_site.wsgi.application'
 
-
-# Database configuration using Railway environment variables
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("MYSQLDATABASE"),
-        'USER': os.getenv("MYSQLUSER"),
-        'PASSWORD': os.getenv("MYSQLPASSWORD"),
-        'HOST': os.getenv("MYSQLHOST"),
-        'PORT': os.getenv("MYSQLPORT", "3306"),
+        'NAME': os.getenv('MYSQLDATABASE'),
+        'USER': os.getenv('MYSQLUSER'),
+        'PASSWORD': os.getenv('MYSQLPASSWORD'),
+        'HOST': os.getenv('MYSQLHOST', 'localhost'),
+        'PORT': os.getenv('MYSQLPORT', '3306'),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
     }
 }
 
-
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -102,35 +87,25 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# Static files
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'ips_intern/static',
-]
+STATICFILES_DIRS = [BASE_DIR / 'ips_intern/static']
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email config (use app password, not Gmail password)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'your_email@example.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'your_app_password')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
-
-# Default primary key type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
