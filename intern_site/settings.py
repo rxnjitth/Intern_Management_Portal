@@ -83,11 +83,14 @@ import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQLDATABASE'),        # ✅ Matches Railway
-        'USER': os.environ.get('MYSQLUSER'),
-        'PASSWORD': os.environ.get('MYSQLPASSWORD'),
-        'HOST': os.environ.get('MYSQLHOST'),            # ✅ Fixes your current crash
-        'PORT': os.environ.get('MYSQLPORT', '3306'),
+        'NAME': 'internportal',
+        'USER': 'root',
+        'PASSWORD': 'lZsHKKsjFEzBtJzIZKRXGVAvPZSnqmUt',
+        'HOST': 'mysql-opwn.railway.internal',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
