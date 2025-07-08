@@ -6,6 +6,3 @@ Process to get a certificate from - IPS TECH COMMUNITY
 4. After which he must learn , practice and do a Hands on Project with the course selected and submit to the assigned mentor
 5. Submitted project undergoes evaluation and the certificate will be provided to the particular Student
 
-PASSWORD
-    1. Admin (gops) - kite@123
-    2. Student (23csb19) - intern@2025
