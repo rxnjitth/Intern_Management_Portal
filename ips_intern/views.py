@@ -1,18 +1,20 @@
+import os
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from .models import *
-from .forms import TaskReportForm
-from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from datetime import date
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from django.contrib.auth.models import User
+from PIL import Image, ImageDraw, ImageFont
+from django.http import FileResponse, Http404
+from django.conf import settings
+from datetime import date, timedelta
+from .models import *
+from .forms import *
 import pandas as pd
-from django.http import HttpResponse
-import os
 
 def custom_login(request):
     form = AuthenticationForm()
@@ -80,20 +82,7 @@ def get_user_role(user):
         return None
 
 # ✅ INTERN DASHBOARD
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from datetime import date
-from .models import TaskReport, InternApplication
-from .forms import TaskReportForm
 
-
-from datetime import date, timedelta
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import InternApplication, TaskReport
-from .forms import TaskReportForm
  # Update path if different
 
 @login_required
@@ -610,14 +599,6 @@ def export_gender_excel(request, gender):
     return response
 
 
-
-from PIL import Image, ImageDraw, ImageFont
-from django.contrib.auth.decorators import login_required
-from django.http import FileResponse, Http404
-from django.shortcuts import get_object_or_404
-import os
-from django.conf import settings
-from .models import InternApplication
 
 
 @login_required
