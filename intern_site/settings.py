@@ -25,13 +25,8 @@ SECRET_KEY = 'django-insecure-wtvngfbeqs7-1@sex(dsktcs51cu&e2w(n^ltw83u38bk0cyul
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["intern.up.railway.app",
-                 "localhost",
-                 "127.0.0.1"]
+ALLOWED_HOSTS = []
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://intern.up.railway.app"
-]
 
 # Application definition
 
@@ -83,14 +78,11 @@ import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'internportal',
-        'USER': 'root',
-        'PASSWORD': 'lZsHKKsjFEzBtJzIZKRXGVAvPZSnqmUt',
-        'HOST': 'mysql-opwn.railway.internal',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'NAME': os.environ.get('MYSQL_DATABASE'),
+        'USER': os.environ.get('MYSQL_USER'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+        'PORT': os.environ.get('MYSQL_PORT', '3306'),
     }
 }
 
@@ -152,3 +144,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'mranjith2506@gmail.com'      # 🔁 Use your admin mail
 EMAIL_HOST_PASSWORD = 'jvtg emtr nwei rzim'     # 🔁 App Password (not your real password)
+
+
