@@ -21,7 +21,7 @@ services:
              python manage.py collectstatic --noinput &&
              gunicorn intern_site.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - .:/app:cached   # ✅ safer for code sync
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     env_file:
@@ -34,7 +34,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro  # ✅ make it read-only
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     depends_on:
