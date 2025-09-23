@@ -1,0 +1,126 @@
+/* Course Details Modal Styling */
+.course-details {
+    padding: 10px 0;
+}
+
+.course-overview {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border-left: 4px solid #17a2b8;
+}
+
+.course-skills h5, 
+.course-projects h5 {
+    margin-top: 15px;
+    color: #343a40;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 8px;
+}
+
+.course-skills ul, 
+.course-projects ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.course-skills li, 
+.course-projects li {
+    position: relative;
+    padding: 8px 0 8px 25px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.course-skills li:before {
+    content: "\f00c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #28a745;
+    position: absolute;
+    left: 0;
+}
+
+.course-projects li:before {
+    content: "\f15c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: #007bff;
+    position: absolute;
+    left: 0;
+}
+
+/* View Details Button Styling */
+#viewCourseDetails {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+#viewCourseDetails:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+/* Modal Header Styling */
+.course-modal-header {
+    color: white;
+    background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+    border-bottom: 3px solid #17a2b8;
+}
+
+/* Dynamic header colors based on course type */
+.course-modal-header.react {
+    background: linear-gradient(135deg, #61dafb 0%, #2a5e7c 100%);
+    border-bottom: 3px solid #61dafb;
+}
+
+.course-modal-header.python {
+    background: linear-gradient(135deg, #4b8bbe 0%, #306998 100%);
+    border-bottom: 3px solid #ffd43b;
+}
+
+.course-modal-header.ml {
+    background: linear-gradient(135deg, #ff6b6b 0%, #8c1d40 100%);
+    border-bottom: 3px solid #ff6b6b;
+}
+
+.course-modal-header.web {
+    background: linear-gradient(135deg, #42b883 0%, #347474 100%);
+    border-bottom: 3px solid #42b883;
+}
+
+.course-modal-header.aiml {
+    background: linear-gradient(135deg, #4776E6 0%, #8E54E9 100%);
+    border-bottom: 3px solid #4776E6;
+}
+
+.course-modal-header.fullstack {
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border-bottom: 3px solid #11998e;
+}
+
+.course-modal-header.iot {
+    background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+    border-bottom: 3px solid #f46b45;
+}
+
+.course-modal-header.cloud-devops {
+    background: linear-gradient(135deg, #7f5a83 0%, #0d324d 100%);
+    border-bottom: 3px solid #7f5a83;
+}
+
+.course-modal-header.cybersecurity {
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    border-bottom: 3px solid #e53935;
+}
+
+.modal-header .close {
+    color: white;
+    text-shadow: none;
+    opacity: 0.8;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}

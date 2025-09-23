@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="{% static 'css/apply_for_intern.css' %}">
+  <link rel="stylesheet" href="{% static 'css/course_details.css' %}"
 </head>
 <body>
   <div class="application-container">
@@ -130,12 +131,20 @@
         <!-- Course Selection -->
         <div class="form-group">
           <label for="id_course_duration" class="form-label">Course and Duration</label>
-          <select class="form-control" id="id_course_duration" name="course_duration" required>
-            <option value="">-- Select Course --</option>
-            {% for course in courses %}
-              <option value="{{ course.id }}">{{ course.course_name }} - {{ course.duration }}</option>
-            {% endfor %}
-          </select>
+          <div class="input-group">
+            <select class="form-control" id="id_course_duration" name="course_duration" required>
+              <option value="">-- Select Course --</option>
+              {% for course in courses %}
+                <option value="{{ course.id }}">{{ course.course_name }} - {{ course.duration }}</option>
+              {% endfor %}
+            </select>
+            <div class="input-group-append">
+              <button type="button" class="btn btn-info" id="viewCourseDetails">
+                <i class="fas fa-info-circle"></i> Course Info
+              </button>
+            </div>
+          </div>
+          <small class="form-text text-muted">Select a course to automatically see course details. Use the Course Info button to view details again.</small>
         </div>
 
         <button type="submit" class="btn btn-submit" id="submitBtn">
@@ -145,10 +154,248 @@
     </div>
   </div>
 
+  <!-- Course Details Modal -->
+  <div class="modal fade" id="courseDetailsModal" tabindex="-1" role="dialog" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header course-modal-header">
+          <h5 class="modal-title" id="courseDetailsModalLabel">Course Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="courseDetails">
+            <!-- Course details will be loaded here dynamically -->
+            <div class="course-details" id="aiml-details" style="display:none;">
+              <h4>Artificial Intelligence & Machine Learning</h4>
+              <div class="course-overview">
+                <p><strong>Course Overview:</strong> Introduction to AI/ML fundamentals with practical implementations using Python.</p>
+                <p><strong>Duration:</strong> 3 weeks</p>
+              </div>
+              <div class="course-skills">
+                <h5>Skills You Will Gain:</h5>
+                <ul>
+                  <li>Python for data science and machine learning</li>
+                  <li>Data preprocessing and exploratory analysis</li>
+                  <li>Supervised learning fundamentals</li>
+                  <li>Basic classification and regression models</li>
+                  <li>Model evaluation techniques</li>
+                  <li>Introduction to neural networks</li>
+                  <li>AI ethics and responsible implementation</li>
+                </ul>
+              </div>
+              <div class="course-projects">
+                <h5>Projects You Will Build:</h5>
+                <ul>
+                  <li>Predictive analysis application</li>
+                  <li>Image classification mini-project</li>
+                  <li>AI-powered decision support tool</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="course-details" id="fullstack-details" style="display:none;">
+              <h4>Full Stack Development</h4>
+              <div class="course-overview">
+                <p><strong>Course Overview:</strong> Comprehensive introduction to both frontend and backend web development.</p>
+                <p><strong>Duration:</strong> 3 weeks</p>
+              </div>
+              <div class="course-skills">
+                <h5>Skills You Will Gain:</h5>
+                <ul>
+                  <li>HTML5, CSS3, and JavaScript fundamentals</li>
+                  <li>Frontend frameworks (React basics)</li>
+                  <li>Responsive design principles</li>
+                  <li>Backend development with Node.js</li>
+                  <li>Database design and integration</li>
+                  <li>RESTful API creation</li>
+                  <li>User authentication implementation</li>
+                </ul>
+              </div>
+              <div class="course-projects">
+                <h5>Projects You Will Build:</h5>
+                <ul>
+                  <li>Personal portfolio website</li>
+                  <li>Full stack CRUD application</li>
+                  <li>API-integrated dashboard</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="course-details" id="iot-details" style="display:none;">
+              <h4>Internet of Things (IoT)</h4>
+              <div class="course-overview">
+                <p><strong>Course Overview:</strong> Introduction to IoT concepts, sensor technologies, and connected device applications.</p>
+                <p><strong>Duration:</strong> 3 weeks</p>
+              </div>
+              <div class="course-skills">
+                <h5>Skills You Will Gain:</h5>
+                <ul>
+                  <li>IoT architecture and ecosystems</li>
+                  <li>Sensor technology fundamentals</li>
+                  <li>Embedded systems programming</li>
+                  <li>Wireless communication protocols</li>
+                  <li>Data collection and processing</li>
+                  <li>IoT security fundamentals</li>
+                  <li>Cloud integration for IoT devices</li>
+                </ul>
+              </div>
+              <div class="course-projects">
+                <h5>Projects You Will Build:</h5>
+                <ul>
+                  <li>Environmental monitoring system</li>
+                  <li>Smart home automation prototype</li>
+                  <li>IoT data visualization dashboard</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="course-details" id="cloud-devops-details" style="display:none;">
+              <h4>Cloud and DevOps</h4>
+              <div class="course-overview">
+                <p><strong>Course Overview:</strong> Introduction to cloud technologies and DevOps practices for modern software delivery.</p>
+                <p><strong>Duration:</strong> 3 weeks</p>
+              </div>
+              <div class="course-skills">
+                <h5>Skills You Will Gain:</h5>
+                <ul>
+                  <li>Cloud computing fundamentals</li>
+                  <li>Infrastructure as Code (IaC)</li>
+                  <li>Containerization with Docker</li>
+                  <li>CI/CD pipeline basics</li>
+                  <li>Version control with Git</li>
+                  <li>Cloud service deployment</li>
+                  <li>Basic monitoring and logging</li>
+                </ul>
+              </div>
+              <div class="course-projects">
+                <h5>Projects You Will Build:</h5>
+                <ul>
+                  <li>Containerized application deployment</li>
+                  <li>Automated CI/CD workflow</li>
+                  <li>Cloud-hosted service configuration</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div class="course-details" id="cybersecurity-details" style="display:none;">
+              <h4>Cyber Security</h4>
+              <div class="course-overview">
+                <p><strong>Course Overview:</strong> Introduction to cyber security principles, threat detection, and defense strategies.</p>
+                <p><strong>Duration:</strong> 3 weeks</p>
+              </div>
+              <div class="course-skills">
+                <h5>Skills You Will Gain:</h5>
+                <ul>
+                  <li>Security fundamentals and best practices</li>
+                  <li>Network security concepts</li>
+                  <li>Vulnerability assessment techniques</li>
+                  <li>Basic penetration testing</li>
+                  <li>Security protocols and encryption</li>
+                  <li>Web application security</li>
+                  <li>Security incident response</li>
+                </ul>
+              </div>
+              <div class="course-projects">
+                <h5>Projects You Will Build:</h5>
+                <ul>
+                  <li>Security assessment report</li>
+                  <li>Secure application implementation</li>
+                  <li>Threat detection system</li>
+                </ul>
+              </div>
+            </div>
+            
+
+            
+            <div class="course-details" id="default-message" style="display:block;">
+              <p class="alert alert-info">Please select a course to view its details.</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{% static 'js/apply_for_intern.js' %}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script>
+    // Course details functionality
+    $(document).ready(function() {
+      // Function to update course details in the modal
+      function updateCourseDetails() {
+        // Get the selected course
+        const selectedCourseText = $('#id_course_duration option:selected').text();
+        const selectedCourse = selectedCourseText.toLowerCase();
+        
+        // Update modal title with selected course name
+        if (!selectedCourse.includes('select')) {
+          $('#courseDetailsModalLabel').text(selectedCourseText);
+        } else {
+          $('#courseDetailsModalLabel').text('Course Details');
+        }
+        
+        // Reset modal header class
+        $('.course-modal-header').removeClass('react python ml web devops');
+        
+        // Hide all course details first
+        $('.course-details').hide();
+        
+        // Show appropriate course details based on selection
+        if (selectedCourse.includes('ai') || selectedCourse.includes('ml') || selectedCourse.includes('machine')) {
+          $('#aiml-details').show();
+          $('.course-modal-header').addClass('aiml');
+        } else if (selectedCourse.includes('full') && selectedCourse.includes('stack')) {
+          $('#fullstack-details').show();
+          $('.course-modal-header').addClass('fullstack');
+        } else if (selectedCourse.includes('iot') || selectedCourse.includes('internet of things')) {
+          $('#iot-details').show();
+          $('.course-modal-header').addClass('iot');
+        } else if ((selectedCourse.includes('cloud') && selectedCourse.includes('devops')) || selectedCourse.includes('cloud')) {
+          $('#cloud-devops-details').show();
+          $('.course-modal-header').addClass('cloud-devops');
+        } else if (selectedCourse.includes('cyber') || selectedCourse.includes('security')) {
+          $('#cybersecurity-details').show();
+          $('.course-modal-header').addClass('cybersecurity');
+        } else if (!selectedCourse.includes('select')) {
+          // If a course is selected but doesn't match any of our pre-defined ones
+          $('#default-message').html('<div class="alert alert-info">Detailed information about "' + 
+            $('#id_course_duration option:selected').text() + 
+            '" will be provided during orientation.</div>').show();
+        } else {
+          // No course selected
+          $('#default-message').html('<p class="alert alert-info">Please select a course to view its details.</p>').show();
+        }
+      }
+      
+      // Course details button click event
+      $('#viewCourseDetails').click(function() {
+        $('#courseDetailsModal').modal('show');
+        updateCourseDetails();
+      });
+      
+      // Update details when course selection changes
+      $('#id_course_duration').change(function() {
+        // Only automatically open modal if a real course is selected (not the placeholder)
+        if ($(this).val() !== '') {
+          // Show details modal when a course is selected
+          $('#courseDetailsModal').modal('show');
+          updateCourseDetails();
+        }
+      });
+      
+      // Update details when modal is shown (in case it's opened by another method)
+      $('#courseDetailsModal').on('shown.bs.modal', function() {
+        updateCourseDetails();
+      });
+    });
+  </script>
 </body>
 </html>
