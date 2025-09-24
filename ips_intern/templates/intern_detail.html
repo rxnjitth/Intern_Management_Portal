@@ -8,23 +8,96 @@
     <title>{{ intern.username }} | Intern Details</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/intern_detail.css' %}">
-  <link rel="stylesheet" href="{% static 'css/blue_theme.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="{% static 'css/intern_detail_new.css' %}">
 </head>
 <body>
-    <div class="main-container">
-        <!-- Header Section -->
-        <div class="header-card fade-in">
-            <h1 class="page-title">
-                <i class="fas fa-user-graduate"></i>
-                Intern Profile: {{ intern.username }}
-            </h1>
+    <div class="dashboard-container">
+        <!-- Left Panel / Sidebar -->
+        <div class="left-panel" id="sidebar">
+            <div class="bg-elements">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+            </div>
+            
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="{% static 'images/ips_logo.webp' %}" alt="IPS Logo" class="sidebar-logo-img">
+                    <span>IPS Interns</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-title">Main Menu</div>
+                <a href="{% url 'admin_dashboard' %}" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'all_interns' %}" class="nav-link active">
+                    <i class="fas fa-users"></i>
+                    <span>All Interns</span>
+                </a>
+                <a href="{% url 'internship_applications' %}" class="nav-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Applications</span>
+                </a>
+                <a href="{% url 'certified_interns' %}" class="nav-link">
+                    <i class="fas fa-certificate"></i>
+                    <span>Certified Interns</span>
+                </a>
+                
+                <div class="menu-title">Categories</div>
+                <a href="{% url 'gender_interns' 'male' %}" class="nav-link">
+                    <i class="fas fa-male"></i>
+                    <span>Male Interns</span>
+                </a>
+                <a href="{% url 'gender_interns' 'female' %}" class="nav-link">
+                    <i class="fas fa-female"></i>
+                    <span>Female Interns</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>&copy; 2025 IPS Tech Community</p>
+            </div>
         </div>
-
-        <!-- Profile Section -->
-        <div class="profile-section fade-in">
-            <h4><i class="fas fa-user me-2"></i>Profile Details</h4>
-            <table class="data-table">
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button class="toggle-sidebar" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="admin-info">
+                    <div class="admin-greeting">Intern Profile: <span class="admin-name">{{ intern.username }}</span></div>
+                </div>
+                
+                <div class="admin-actions">
+                    <a href="{% url 'custom_logout' %}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner fade-in">
+                    <h1>
+                        <i class="fas fa-user-graduate"></i>
+                        Intern Profile: {{ intern.username }}
+                    </h1>
+                </div>
+                
+                <!-- Profile Section -->
+                <div class="detail-card fade-in">
+                    <h4><i class="fas fa-user"></i> Profile Details</h4>
+                    <table class="data-table">
                 <tr>
                     <th>Username</th>
                     <td>{{ intern.username }}</td>
@@ -62,108 +135,138 @@
                 </tr>
                 {% endif %}
             </table>
-            <!-- Mobile Card View -->
-            <div class="profile-card">
-                <div class="profile-card-item">
-                    <label>Username</label>
-                    <span>{{ intern.username }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Email</label>
-                    <span>{{ intern.email }}</span>
-                </div>
-                {% if application %}
-                <div class="profile-card-item">
-                    <label>Roll No</label>
-                    <span>{{ application.roll_no }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Department</label>
-                    <span class="department-badge">{{ application.department|default:"Department not specified" }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>CGPA</label>
-                    <span>{{ application.cgpa }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Arrears</label>
-                    <span>{{ application.arrears }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Course Duration</label>
-                    <span>{{ application.course_duration }}</span>
-                </div>
-                {% else %}
-                <div class="profile-card-item text-center text-muted">
-                    <i class="fas fa-exclamation-circle me-2"></i>No application found for this user.
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Task Progress Section -->
-        <div class="task-section fade-in">
-            <h4><i class="fas fa-chart-bar me-2"></i>Task Progress</h4>
-            <div class="progress">
-                <div class="progress-bar bg-success" role="progressbar"
-                     style="width: {{ progress }}%;" aria-valuenow="{{ progress }}"
-                     aria-valuemin="0" aria-valuemax="100">
-                    {{ progress }}%
-                </div>
-            </div>
-            <small class="progress-text">{{ submission_count }} submitted / {{ total_days }} total days</small>
-        </div>
-
-        <!-- Submitted Tasks Section -->
-        <div class="task-section fade-in">
-            <h4><i class="fas fa-tasks me-2"></i>Submitted Tasks</h4>
-            {% if task_reports %}
-            <div class="task-list">
-                <div class="list-group">
-                    {% for task in task_reports %}
-                    <div class="list-group-item task-item">
-                        <strong>{{ task.date }}:</strong> {{ task.topic|truncatechars:80 }}
+                <!-- Mobile Card View -->
+                <div class="profile-card">
+                    <div class="profile-card-item">
+                        <label>Username</label>
+                        <span>{{ intern.username }}</span>
                     </div>
-                    {% endfor %}
+                    <div class="profile-card-item">
+                        <label>Email</label>
+                        <span>{{ intern.email }}</span>
+                    </div>
+                    {% if application %}
+                    <div class="profile-card-item">
+                        <label>Roll No</label>
+                        <span>{{ application.roll_no }}</span>
+                    </div>
+                    <div class="profile-card-item">
+                        <label>Department</label>
+                        <span class="department-badge">{{ application.department|default:"Department not specified" }}</span>
+                    </div>
+                    <div class="profile-card-item">
+                        <label>CGPA</label>
+                        <span>{{ application.cgpa }}</span>
+                    </div>
+                    <div class="profile-card-item">
+                        <label>Arrears</label>
+                        <span>{{ application.arrears }}</span>
+                    </div>
+                    <div class="profile-card-item">
+                        <label>Course Duration</label>
+                        <span>{{ application.course_duration }}</span>
+                    </div>
+                    {% else %}
+                    <div class="profile-card-item text-center text-muted">
+                        <i class="fas fa-exclamation-circle me-2"></i>No application found for this user.
+                    </div>
+                    {% endif %}
+                </div>
+                </div>
+
+                <!-- Task Progress Section -->
+                <div class="detail-card fade-in">
+                    <h4><i class="fas fa-chart-bar"></i> Task Progress</h4>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" role="progressbar"
+                             style="width: {{ progress }}%;" aria-valuenow="{{ progress }}"
+                             aria-valuemin="0" aria-valuemax="100">
+                            {{ progress }}%
+                        </div>
+                    </div>
+                    <small class="progress-text">{{ submission_count }} submitted / {{ total_days }} total days</small>
+                </div>
+
+                <!-- Submitted Tasks Section -->
+                <div class="detail-card fade-in">
+                    <h4><i class="fas fa-tasks"></i> Submitted Tasks</h4>
+                    {% if task_reports %}
+                    <div class="task-list">
+                        <div class="list-group">
+                            {% for task in task_reports %}
+                            <div class="list-group-item task-item">
+                                <strong>{{ task.date }}:</strong> {{ task.topic|truncatechars:80 }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-muted"><i class="fas fa-info-circle me-2"></i>No task reports submitted yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Certification Status Section -->
+                <div class="detail-card fade-in">
+                    <h4><i class="fas fa-certificate"></i> Certification Status</h4>
+                    {% if progress == 100 %}
+                        {% if not application.is_certified %}
+                        <p>Progress Completed ✅. Review and approve certification:</p>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'mark_certification' intern.id 'approve' %}" class="action-button approve">
+                                <i class="fas fa-check"></i> Approve Certificate
+                            </a>
+                            <a href="{% url 'mark_certification' intern.id 'reject' %}" class="action-button reject">
+                                <i class="fas fa-times"></i> Reject Certificate
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success mt-3" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>Certificate Approved
+                        </div>
+                        {% endif %}
+                    {% else %}
+                    <div class="alert alert-warning mt-3" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Progress not complete ({{ progress }}%). Certification approval disabled.
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Navigation -->
+                <div class="d-flex justify-content-center fade-in mt-4">
+                    <a href="{% url 'all_interns' %}" class="action-button back">
+                        <i class="fas fa-arrow-left"></i> Back to Interns List
+                    </a>
                 </div>
             </div>
-            {% else %}
-            <p class="text-muted"><i class="fas fa-info-circle me-2"></i>No task reports submitted yet.</p>
-            {% endif %}
         </div>
-
-        <!-- Certification Status Section -->
-        <div class="certification-section fade-in">
-            <h4><i class="fas fa-certificate me-2"></i>Certification Status</h4>
-            {% if progress == 100 %}
-                {% if not application.is_certified %}
-                <p>Progress Completed ✅. Review and approve certification:</p>
-                <div class="d-flex gap-2">
-                    <a href="{% url 'mark_certification' intern.id 'approve' %}" class="action-button approve">
-                        <i class="fas fa-check"></i> Approve Certificate
-                    </a>
-                    <a href="{% url 'mark_certification' intern.id 'reject' %}" class="action-button reject">
-                        <i class="fas fa-times"></i> Reject Certificate
-                    </a>
-                </div>
-                {% else %}
-                <div class="alert alert-success mt-3" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>Certificate Approved
-                </div>
-                {% endif %}
-            {% else %}
-            <div class="alert alert-warning mt-3" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i>Progress not complete ({{ progress }}%). Certification approval disabled.
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- Navigation -->
-        <div class="d-flex justify-content-center fade-in mt-4">
-            <a href="{% url 'all_interns' %}" class="action-button back">
-                <i class="fas fa-arrow-left"></i> Back to Interns List
-            </a>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    </div>        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation classes to fade-in elements
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('animate__animated', 'animate__fadeIn');
+                }, index * 150);
+            });
+            
+            // Toggle sidebar on mobile
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+                
+                // Close sidebar when clicking outside of it
+                document.addEventListener('click', function(event) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

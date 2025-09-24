@@ -4,198 +4,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Applicant Details - {{ app.name }}</title>
+    <title>Applicant Details - {{ app.name }} | IPS Interns</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f4f6f9;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #212529;
-        }
-        .main-container {
-            max-width: 1400px;
-            margin: clamp(1rem, 2vw, 1.25rem) auto;
-            padding: 0 clamp(0.5rem, 2vw, 0.75rem);
-        }
-        .header-card {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            color: white;
-            border-radius: 10px;
-            padding: clamp(0.75rem, 2vw, 1rem);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            margin-bottom: clamp(0.75rem, 2vw, 1rem);
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-        .page-title {
-            font-size: clamp(1.3rem, 3.5vw, 1.5rem);
-            font-weight: 700;
-            margin: 0;
-        }
-        .page-title i {
-            margin-right: 0.5rem;
-        }
-        .profile-section {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            padding: clamp(0.75rem, 2vw, 1rem);
-            margin-bottom: clamp(0.75rem, 2vw, 1rem);
-        }
-        .data-table {
-            width: 100%;
-            margin-bottom: 0;
-        }
-        .data-table th {
-            background: #f8f9fa;
-            font-weight: 600;
-            padding: clamp(0.5rem, 1.5vw, 0.75rem);
-            color: #343a40;
-            width: 30%;
-        }
-        .data-table td {
-            vertical-align: middle;
-            padding: clamp(0.5rem, 1.5vw, 0.75rem);
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-        }
-        .department-badge {
-            font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-            color: #fff;
-            background-color: #6c757d;
-            padding: 0.2rem 0.4rem;
-            border-radius: 10px;
-            display: inline-block;
-        }
-        .action-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            border-radius: 6px;
-            padding: clamp(0.5rem, 1.5vw, 0.6rem);
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
-        .action-button.approve {
-            background: #28a745;
-            color: white;
-        }
-        .action-button.approve:hover {
-            background: #218838;
-        }
-        .action-button.reject {
-            background: #dc3545;
-            color: white;
-        }
-        .action-button.reject:hover {
-            background: #c82333;
-        }
-        .action-button.back {
-            background: #6c757d;
-            color: white;
-        }
-        .action-button.back:hover {
-            background: #5a6268;
-        }
-        .status-badge {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-        }
-        .profile-card {
-            display: none;
-            background: white;
-            border-radius: 8px;
-            padding: clamp(0.5rem, 1.5vw, 0.75rem);
-            margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        .profile-card-item {
-            display: grid;
-            grid-template-columns: 100px 1fr;
-            gap: 0.4rem;
-            margin-bottom: 0.4rem;
-            align-items: center;
-        }
-        .profile-card-item label {
-            font-weight: 600;
-            color: #343a40;
-            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-        }
-        .profile-card-item span {
-            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @media (max-width: 768px) {
-            .data-table {
-                display: none;
-            }
-            .profile-card {
-                display: block;
-            }
-            .main-container {
-                padding: 0 0.5rem;
-            }
-            .header-card {
-                padding: clamp(0.5rem, 1.5vw, 0.75rem);
-            }
-            .action-button {
-                padding: clamp(0.6rem, 2vw, 0.8rem);
-                font-size: clamp(0.85rem, 2vw, 0.95rem);
-            }
-        }
-        @media (max-width: 576px) {
-            .page-title {
-                font-size: clamp(1.1rem, 3vw, 1.2rem);
-            }
-            .profile-card-item {
-                grid-template-columns: 90px 1fr;
-                gap: 0.3rem;
-            }
-            .profile-card-item label, .profile-card-item span {
-                font-size: clamp(0.75rem, 1.8vw, 0.85rem);
-            }
-            .action-button, .status-badge {
-                padding: clamp(0.5rem, 1.5vw, 0.6rem);
-                font-size: clamp(0.75rem, 1.8vw, 0.85rem);
-            }
-        }
-        @media (min-width: 769px) {
-            .profile-card {
-                display: none;
-            }
-        }
-        @media (min-width: 992px) {
-            .main-container {
-                padding: 0 1rem;
-            }
-        }
-    </style>
-  <link rel="stylesheet" href="{% static 'css/blue_theme.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="{% static 'css/application_detail_new.css' %}">
 </head>
 <body>
-    <div class="main-container">
-        <!-- Header Section -->
-        <div class="header-card fade-in">
-            <h1 class="page-title">
-                <i class="fas fa-file-alt"></i>
-                Internship Applicant: {{ app.name }}
-            </h1>
+    <div class="dashboard-container">
+        <!-- Left Panel / Sidebar -->
+        <div class="left-panel" id="sidebar">
+            <div class="bg-elements">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+            </div>
+            
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="{% static 'images/ips_logo.webp' %}" alt="IPS Logo" class="sidebar-logo-img">
+                    <span>IPS Interns</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-title">Main Menu</div>
+                <a href="{% url 'admin_dashboard' %}" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{% url 'all_interns' %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>All Interns</span>
+                </a>
+                <a href="{% url 'internship_applications' %}" class="nav-link active">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Applications</span>
+                </a>
+                <a href="{% url 'certified_interns' %}" class="nav-link">
+                    <i class="fas fa-certificate"></i>
+                    <span>Certified Interns</span>
+                </a>
+                
+                <div class="menu-title">Categories</div>
+                <a href="{% url 'gender_interns' 'male' %}" class="nav-link">
+                    <i class="fas fa-male"></i>
+                    <span>Male Interns</span>
+                </a>
+                <a href="{% url 'gender_interns' 'female' %}" class="nav-link">
+                    <i class="fas fa-female"></i>
+                    <span>Female Interns</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>&copy; 2025 IPS Tech Community</p>
+            </div>
         </div>
-
-        <!-- Profile Section -->
-        <div class="profile-section fade-in">
-            <table class="data-table">
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button class="toggle-sidebar" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="admin-info">
+                    <div class="admin-greeting">Applicant: <span class="admin-name">{{ app.name }}</span></div>
+                </div>
+                
+                <div class="admin-actions">
+                    <a href="{% url 'custom_logout' %}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner fade-in">
+                    <h1>
+                        <i class="fas fa-file-alt"></i>
+                        Internship Application Details
+                    </h1>
+                </div>
+                
+                <!-- Profile Section -->
+                <div class="detail-card fade-in">
+                    <h4><i class="fas fa-user"></i> Applicant Information</h4>
+                    <table class="data-table">
                 <tr>
                     <th>Name</th>
                     <td>{{ app.name }}</td>
@@ -229,78 +130,106 @@
                     <td>{{ app.course_duration }}</td>
                 </tr>
             </table>
-            <!-- Mobile Card View -->
-            <div class="profile-card">
-                <div class="profile-card-item">
-                    <label>Name</label>
-                    <span>{{ app.name }}</span>
+                    <!-- Mobile Card View -->
+                    <div class="profile-card">
+                        <div class="profile-card-item">
+                            <label>Name</label>
+                            <span>{{ app.name }}</span>
+                        </div>
+                        <div class="profile-card-item">
+                            <label>Roll Number</label>
+                            <span>{{ app.roll_no }}</span>
+                        </div>
+                        <div class="profile-card-item">
+                            <label>Department</label>
+                            <span class="department-badge">{{ app.department|default:"Department not specified" }}</span>
+                        </div>
+                        <div class="profile-card-item">
+                            <label>CGPA</label>
+                            <span>{{ app.cgpa }}</span>
+                        </div>
+                        <div class="profile-card-item">
+                            <label>Arrears</label>
+                            <span>{{ app.arrears }}</span>
+                        </div>
+                        <div class="profile-card-item">
+                            <label>Gender</label>
+                            <span>{{ app.gender }}</span>
+                        </div>
+                        <div class="profile-card-item">
+                            <label>Email</label>
+                            <span>{{ app.clg_mailid }}</span>
+                        </div>
+                        <div class="profile-card-item">
+                            <label>Course Duration</label>
+                            <span>{{ app.course_duration }}</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="profile-card-item">
-                    <label>Roll Number</label>
-                    <span>{{ app.roll_no }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Department</label>
-                    <span class="department-badge">{{ app.department|default:"Department not specified" }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>CGPA</label>
-                    <span>{{ app.cgpa }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Arrears</label>
-                    <span>{{ app.arrears }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Gender</label>
-                    <span>{{ app.gender }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Email</label>
-                    <span>{{ app.clg_mailid }}</span>
-                </div>
-                <div class="profile-card-item">
-                    <label>Course Duration</label>
-                    <span>{{ app.course_duration }}</span>
+
+                <!-- Actions Section -->
+                <div class="detail-card fade-in">
+                    <h4><i class="fas fa-tasks"></i> Application Actions</h4>
+                    <div class="action-buttons">
+                        {% if not app.is_approved and not app.is_rejected %}
+                        <a href="{% url 'approve_application' app.id %}" class="action-button approve">
+                            <i class="fas fa-check"></i> Approve
+                        </a>
+                        <a href="{% url 'reject_application' app.id %}" class="action-button reject">
+                            <i class="fas fa-times"></i> Reject
+                        </a>
+                        {% elif app.is_approved %}
+                        <span class="status-badge bg-success">
+                            <i class="fas fa-check-circle"></i> Approved
+                        </span>
+                        {% elif app.is_rejected %}
+                        <span class="status-badge bg-danger">
+                            <i class="fas fa-times-circle"></i> Rejected
+                        </span>
+                        {% endif %}
+                        <a href="{% url 'internship_applications' %}" class="action-button back">
+                            <i class="fas fa-arrow-left"></i> Back to Applications
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Actions Section -->
-        <div class="d-flex flex-column flex-md-row gap-2 justify-content-center fade-in mb-3">
-            {% if not app.is_approved and not app.is_rejected %}
-            <a href="{% url 'approve_application' app.id %}" class="action-button approve">
-                <i class="fas fa-check"></i> Approve
-            </a>
-            <a href="{% url 'reject_application' app.id %}" class="action-button reject">
-                <i class="fas fa-times"></i> Reject
-            </a>
-            {% elif app.is_approved %}
-            <span class="status-badge bg-success">
-                <i class="fas fa-check-circle"></i> Approved
-            </span>
-            {% elif app.is_rejected %}
-            <span class="status-badge bg-danger">
-                <i class="fas fa-times-circle"></i> Rejected
-            </span>
-            {% endif %}
-            <a href="{% url 'internship_applications' %}" class="action-button back">
-                <i class="fas fa-arrow-left"></i> Back
-            </a>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Show profile card on mobile
-        if (window.innerWidth <= 768) {
-            document.querySelector('.profile-card').style.display = 'block';
-            document.querySelector('.data-table').style.display = 'none';
-        }
-        // Add fade-in effect to profile section
-        document.querySelector('.profile-section').classList.add('fade-in');
-        // Add fade-in effect to header
-        document.querySelector('.header-card').classList.add('fade-in');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation classes to fade-in elements
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('animate__animated', 'animate__fadeIn');
+                }, index * 150);
+            });
+            
+            // Toggle sidebar on mobile
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+                
+                // Close sidebar when clicking outside of it
+                document.addEventListener('click', function(event) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('show');
+                    }
+                });
+            }
+            
+            // Show profile card on mobile
+            if (window.innerWidth <= 991) {
+                document.querySelector('.profile-card').style.display = 'block';
+                document.querySelector('.data-table').style.display = 'none';
+            }
+        });
     </script>   
 </body>
 </html>
