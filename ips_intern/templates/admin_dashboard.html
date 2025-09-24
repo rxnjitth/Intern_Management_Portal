@@ -8,288 +8,157 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #e0e7ff, #f4f6f9);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #212529;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            margin: 0;
-        }
-        .navbar {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .navbar-brand {
-            font-size: clamp(1.2rem, 3vw, 1.3rem);
-        }
-        .navbar .btn {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.8rem, 2vw, 1rem);
-        }
-        .main-container {
-            max-width: 1400px;
-            margin: clamp(1.5rem, 3vw, 2rem) auto;
-            padding: 0 clamp(0.5rem, 2vw, 0.75rem);
-            flex: 1;
-        }
-        .main-heading {
-            font-size: clamp(1.5rem, 3.5vw, 1.8rem);
-            font-weight: 700;
-            color: #343a40;
-            text-align: center;
-            margin-bottom: clamp(1rem, 3vw, 1.5rem);
-        }
-        .admin-name {
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            color: #007bff;
-        }
-        .dashboard-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-        }
-        .dashboard-card .card-body {
-            padding: clamp(1rem, 2.5vw, 1.25rem);
-            text-align: center;
-        }
-        .card-icon {
-            font-size: clamp(2rem, 5vw, 2.5rem);
-            color: #007bff;
-            margin-bottom: 0.5rem;
-        }
-        .card-title {
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            font-weight: 600;
-            color: #343a40;
-            margin-bottom: 0.5rem;
-        }
-        .card-value {
-            font-size: clamp(1.5rem, 4vw, 1.8rem);
-            font-weight: 700;
-            color: #007bff;
-            margin-bottom: 0.5rem;
-        }
-        .card-link {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .card-link:hover {
-            color: #0056b3;
-        }
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: #28a745;
-            color: white;
-            border-radius: 6px;
-            padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1rem, 2.5vw, 1.25rem);
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-        .download-btn:hover {
-            background: #218838;
-            color: white;
-        }
-        .footer-message {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            color: #6c757d;
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @media (max-width: 768px) {
-            .main-container {
-                padding: 0 0.5rem;
-            }
-            .main-heading {
-                font-size: clamp(1.3rem, 3vw, 1.5rem);
-            }
-            .admin-name {
-                font-size: clamp(0.9rem, 2vw, 1rem);
-            }
-            .dashboard-card {
-                margin-bottom: clamp(0.75rem, 2vw, 1rem);
-            }
-            .dashboard-card .card-body {
-                padding: clamp(0.75rem, 2vw, 1rem);
-            }
-            .card-icon {
-                font-size: clamp(1.8rem, 4vw, 2rem);
-            }
-            .card-title {
-                font-size: clamp(0.9rem, 2vw, 1rem);
-            }
-            .card-value {
-                font-size: clamp(1.3rem, 3.5vw, 1.5rem);
-            }
-            .card-link {
-                font-size: clamp(0.75rem, 1.8vw, 0.85rem);
-            }
-            .download-btn {
-                width: 100%;
-                padding: clamp(0.5rem, 1.5vw, 0.6rem);
-                font-size: clamp(0.85rem, 2vw, 0.95rem);
-            }
-        }
-        @media (max-width: 576px) {
-            .navbar-brand {
-                font-size: clamp(1rem, 2.5vw, 1.1rem);
-            }
-            .navbar .btn {
-                padding: clamp(0.3rem, 1.5vw, 0.4rem) clamp(0.6rem, 1.8vw, 0.8rem);
-                font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-            }
-            .main-heading {
-                font-size: clamp(1.1rem, 3vw, 1.2rem);
-            }
-            .admin-name {
-                font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-            }
-            .card-icon {
-                font-size: clamp(1.5rem, 3.5vw, 1.8rem);
-            }
-            .card-title {
-                font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-            }
-            .card-value {
-                font-size: clamp(1.2rem, 3vw, 1.3rem);
-            }
-            .footer-message {
-                font-size: clamp(0.75rem, 1.8vw, 0.85rem);
-            }
-        }
-        @media (min-width: 992px) {
-            .main-container {
-                padding: 0 1rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard_new.css' %}">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fade-in">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard - {{ admin_name|default:"Admin" }}
-            </a>
-            <div class="d-flex">
-                <a href="{% url 'custom_logout' %}" class="btn btn-outline-light">
-                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+    <div class="dashboard-container">
+        <!-- Left Panel / Sidebar -->
+        <div class="left-panel" id="sidebar">
+            <div class="bg-elements">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+            </div>
+            
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="{% static 'images/ips_logo.webp' %}" alt="IPS Logo" class="sidebar-logo-img">
+                    <span>IPS Interns</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <div class="menu-title">Main Menu</div>
+                <a href="{% url 'admin_dashboard' %}" class="nav-link active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
                 </a>
+                <a href="{% url 'all_interns' %}" class="nav-link">
+                    <i class="fas fa-users"></i>
+                    <span>All Interns</span>
+                </a>
+                <a href="{% url 'internship_applications' %}" class="nav-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Applications</span>
+                </a>
+                <a href="{% url 'certified_interns' %}" class="nav-link">
+                    <i class="fas fa-certificate"></i>
+                    <span>Certified Interns</span>
+                </a>
+                
+                <div class="menu-title">Categories</div>
+                <a href="{% url 'gender_interns' 'male' %}" class="nav-link">
+                    <i class="fas fa-male"></i>
+                    <span>Male Interns</span>
+                </a>
+                <a href="{% url 'gender_interns' 'female' %}" class="nav-link">
+                    <i class="fas fa-female"></i>
+                    <span>Female Interns</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-footer">
+                <p>&copy; 2025 IPS Tech Community</p>
             </div>
         </div>
-    </nav>
-
-    <!-- Main Container -->
-    <div class="main-container">
-        <h2 class="main-heading fade-in">
-            <i class="fas fa-chart-line"></i> Welcome, <span class="admin-name">{{ admin_name|default:"Admin" }}</span>!
-        </h2>
-
-        <div class="row g-4 justify-content-center fade-in">
-            <!-- Total Interns -->
-            <div class="col-lg-4 col-md-6">
-                <a href="{% url 'all_interns' %}" class="text-decoration-none">
-                    <div class="dashboard-card">
-                        <div class="card-body">
-                            <i class="fas fa-users card-icon"></i>
-                            <h5 class="card-title">Total Interns</h5>
-                            <div class="card-value">{{ total_interns }}</div>
-                            <span class="card-link">View All Interns <i class="fas fa-arrow-right"></i></span>
-                        </div>
+        
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button class="toggle-sidebar" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="admin-info">
+                    <div class="admin-greeting">Welcome, <span class="admin-name">{{ admin_name|default:"Admin" }}</span>!</div>
+                </div>
+                
+                <div class="admin-actions">
+                    <div class="notification-bell{% if pending_applications > 0 %} has-notifications{% endif %}" id="notificationBell">
+                        <i class="fas fa-bell"></i>
+                        {% if pending_applications > 0 %}
+                        <span class="notification-badge">{{ pending_applications }}</span>
+                        {% endif %}
                     </div>
-                </a>
+                    
+                    <a href="{% url 'custom_logout' %}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
             </div>
-
-            <!-- Internship Applications -->
-            <div class="col-lg-4 col-md-6">
-                <a href="{% url 'internship_applications' %}" class="text-decoration-none">
-                    <div class="dashboard-card">
-                        <div class="card-body">
-                            <i class="fas fa-file-alt card-icon"></i>
-                            <h5 class="card-title">Internship Applications</h5>
-                            <div class="card-value">{{ pending_applications }}</div>
-                            <span class="card-link">View Applications <i class="fas fa-arrow-right"></i></span>
+            
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner fade-in">
+                    <h1>Admin Dashboard</h1>
+                    
+                </div>
+                
+                <!-- Stats Grid -->
+                <div class="stats-grid fade-in">
+                    <!-- Total Interns -->
+                    <div class="stat-card total-interns">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
                         </div>
+                        <h3 class="stat-title">Total Interns</h3>
+                        <div class="stat-value">{{ total_interns }}</div>
                     </div>
-                </a>
-            </div>
-
-            <!-- Certified Interns -->
-            <div class="col-lg-4 col-md-6">
-                <a href="{% url 'certified_interns' %}" class="text-decoration-none">
-                    <div class="dashboard-card">
-                        <div class="card-body">
-                            <i class="fas fa-certificate card-icon"></i>
-                            <h5 class="card-title">Certified Interns</h5>
-                            <div class="card-value">{{ certified_interns|default:"--" }}</div>
-                            <span class="card-link">View Certified <i class="fas fa-arrow-right"></i></span>
+                    
+                    <!-- Applications -->
+                    <div class="stat-card applications">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
                         </div>
+                        <h3 class="stat-title">Internship Applications</h3>
+                        <div class="stat-value">{{ pending_applications }}</div>
                     </div>
-                </a>
-            </div>
-
-            <!-- Male Interns -->
-            <div class="col-lg-4 col-md-6">
-                <a href="{% url 'gender_interns' 'male' %}" class="text-decoration-none">
-                    <div class="dashboard-card">
-                        <div class="card-body">
-                            <i class="fas fa-male card-icon"></i>
-                            <h5 class="card-title">Male Interns</h5>
-                            <div class="card-value">{{ male_count }}</div>
-                            <span class="card-link">View Male Interns <i class="fas fa-arrow-right"></i></span>
+                    
+                    <!-- Certified Interns -->
+                    <div class="stat-card certified">
+                        <div class="stat-icon">
+                            <i class="fas fa-certificate"></i>
                         </div>
+                        <h3 class="stat-title">Certified Interns</h3>
+                        <div class="stat-value">{{ certified_interns|default:"0" }}</div>
                     </div>
-                </a>
-            </div>
-
-            <!-- Female Interns -->
-            <div class="col-lg-4 col-md-6">
-                <a href="{% url 'gender_interns' 'female' %}" class="text-decoration-none">
-                    <div class="dashboard-card">
-                        <div class="card-body">
-                            <i class="fas fa-female card-icon"></i>
-                            <h5 class="card-title">Female Interns</h5>
-                            <div class="card-value">{{ female_count }}</div>
-                            <span class="card-link">View Female Interns <i class="fas fa-arrow-right"></i></span>
+                    
+                    <!-- Male Interns -->
+                    <div class="stat-card male-interns">
+                        <div class="stat-icon">
+                            <i class="fas fa-male"></i>
                         </div>
+                        <h3 class="stat-title">Male Interns</h3>
+                        <div class="stat-value">{{ male_count }}</div>
                     </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Excel Download Button -->
-        <div class="text-center mt-4 fade-in">
-            <a href="{% url 'export_interns_excel' %}" class="download-btn">
-                <i class="fas fa-file-excel me-2"></i>Download All Intern Data (Excel)
-            </a>
-        </div>
-
-        <!-- Footer Message -->
-        <div class="row mt-4 fade-in">
-            <div class="col text-center">
-                <p class="footer-message">
-                    Need more features? Task reports, intern list, certifications — just ask 🛠️
-                </p>
+                    
+                    <!-- Female Interns -->
+                    <div class="stat-card female-interns">
+                        <div class="stat-icon">
+                            <i class="fas fa-female"></i>
+                        </div>
+                        <h3 class="stat-title">Female Interns</h3>
+                        <div class="stat-value">{{ female_count }}</div>
+                    </div>
+                </div>
+                
+                <!-- Download Section -->
+                <div class="download-section fade-in">
+                    <h3 class="download-title">Export Intern Data</h3>
+                    <a href="{% url 'export_interns_excel' %}" class="download-btn">
+                        <i class="fas fa-file-excel"></i>
+                        <span>Download All Intern Data (Excel)</span>
+                    </a>
+                </div>
+                
+                <!-- Footer Message -->
+                <div class="footer-message fade-in">
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -297,13 +166,126 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Add animation classes to fade-in elements
             const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(el => {
-                el.classList.add('animate__animated', 'animate__fadeIn');
+            fadeElements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.classList.add('animate__animated', 'animate__fadeIn');
+                }, index * 150);
             });
+            
+            // Toggle sidebar on mobile
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+                
+                // Close sidebar when clicking outside of it
+                document.addEventListener('click', function(event) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('show');
+                    }
+                });
+            }
+            
+            // Dynamic notification bell
+            const notificationBell = document.getElementById('notificationBell');
+            if (notificationBell && notificationBell.classList.contains('has-notifications')) {
+                // Add pulse animation to notification bell
+                const pulseAnimation = () => {
+                    notificationBell.classList.add('pulse-animation');
+                    setTimeout(() => {
+                        notificationBell.classList.remove('pulse-animation');
+                    }, 1000);
+                };
+                
+                // Initial pulse
+                setTimeout(pulseAnimation, 2000);
+                
+                // Repeat pulse every 30 seconds
+                setInterval(pulseAnimation, 30000);
+                
+                // Get application count
+                const applicationCount = parseInt("{{ pending_applications|default:'0' }}");
+                
+                // Create notification popup
+                notificationBell.addEventListener('click', function() {
+                    // Create notification popup
+                    const notificationPopup = document.createElement('div');
+                    notificationPopup.className = 'notification-popup';
+                    
+                    // Create header with title and close button
+                    const popupHeader = document.createElement('div');
+                    popupHeader.className = 'notification-popup-header';
+                    
+                    const popupTitle = document.createElement('h5');
+                    popupTitle.textContent = 'New Internship Applications';
+                    
+                    const closeButton = document.createElement('button');
+                    closeButton.className = 'notification-close-btn';
+                    closeButton.innerHTML = '&times;';
+                    closeButton.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        document.body.removeChild(notificationPopup);
+                    });
+                    
+                    popupHeader.appendChild(popupTitle);
+                    popupHeader.appendChild(closeButton);
+                    
+                    // Create notification content
+                    const popupContent = document.createElement('div');
+                    popupContent.className = 'notification-popup-content';
+                    
+                    if (applicationCount > 0) {
+                        const message = document.createElement('p');
+                        message.innerHTML = `<b>${applicationCount}</b> new student${applicationCount !== 1 ? 's' : ''} applied for internship${applicationCount !== 1 ? 's' : ''}.`;
+                        
+                        const viewLink = document.createElement('a');
+                        viewLink.href = "{% url 'internship_applications' %}";
+                        viewLink.className = 'notification-link';
+                        viewLink.textContent = 'View applications';
+                        
+                        popupContent.appendChild(message);
+                        popupContent.appendChild(viewLink);
+                    } else {
+                        popupContent.textContent = 'No new internship applications at this time.';
+                    }
+                    
+                    // Add all elements to popup
+                    notificationPopup.appendChild(popupHeader);
+                    notificationPopup.appendChild(popupContent);
+                    
+                    // Position popup and add to body
+                    const bellRect = notificationBell.getBoundingClientRect();
+                    notificationPopup.style.top = (bellRect.bottom + window.scrollY + 10) + 'px';
+                    notificationPopup.style.right = (window.innerWidth - bellRect.right) + 'px';
+                    
+                    // Remove any existing popup before adding a new one
+                    const existingPopup = document.querySelector('.notification-popup');
+                    if (existingPopup) {
+                        document.body.removeChild(existingPopup);
+                    }
+                    
+                    document.body.appendChild(notificationPopup);
+                    
+                    // Close popup when clicking outside
+                    setTimeout(() => {
+                        document.addEventListener('click', function closePopup(e) {
+                            if (!notificationPopup.contains(e.target) && e.target !== notificationBell) {
+                                document.body.removeChild(notificationPopup);
+                                document.removeEventListener('click', closePopup);
+                            }
+                        });
+                    }, 10);
+                });
+                
+                notificationBell.style.cursor = 'pointer';
+                notificationBell.setAttribute('title', 'Click to view notifications');
+            }
         });
     </script>
-
-    {% include 'includes/footer.html' %}
 </body>
 </html>

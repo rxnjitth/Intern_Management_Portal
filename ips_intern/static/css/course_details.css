@@ -3,12 +3,29 @@
     padding: 10px 0;
 }
 
+.course-details h4 {
+    color: var(--primary-dark);
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
 .course-overview {
     margin-bottom: 20px;
     padding: 15px;
     background-color: #f8f9fa;
-    border-radius: 5px;
-    border-left: 4px solid #17a2b8;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.course-overview p {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.course-overview p:last-child {
+    margin-bottom: 0;
 }
 
 .course-skills h5, 
@@ -18,12 +35,14 @@
     font-weight: 600;
     border-bottom: 2px solid #dee2e6;
     padding-bottom: 8px;
+    font-size: 1.1rem;
 }
 
 .course-skills ul, 
 .course-projects ul {
     list-style-type: none;
     padding-left: 0;
+    margin-top: 0.75rem;
 }
 
 .course-skills li, 
@@ -31,6 +50,7 @@
     position: relative;
     padding: 8px 0 8px 25px;
     border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95rem;
 }
 
 .course-skills li:before {
@@ -46,7 +66,7 @@
     content: "\f15c";
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
-    color: #007bff;
+    color: var(--primary-color);
     position: absolute;
     left: 0;
 }
@@ -103,6 +123,32 @@
 .course-modal-header.iot {
     background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
     border-bottom: 3px solid #f46b45;
+}
+
+/* Responsive styling for mobile */
+@media (max-width: 576px) {
+    .course-details h4 {
+        font-size: 1.2rem;
+    }
+    
+    .course-overview {
+        padding: 12px;
+    }
+    
+    .course-overview p {
+        font-size: 0.9rem;
+    }
+    
+    .course-skills h5, 
+    .course-projects h5 {
+        font-size: 1rem;
+    }
+    
+    .course-skills li, 
+    .course-projects li {
+        padding: 6px 0 6px 22px;
+        font-size: 0.9rem;
+    }
 }
 
 .course-modal-header.cloud-devops {

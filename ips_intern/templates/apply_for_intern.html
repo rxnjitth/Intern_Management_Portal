@@ -5,12 +5,143 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply for Internship | IPS Portal</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'css/apply_for_intern.css' %}">
-  <link rel="stylesheet" href="{% static 'css/course_details.css' %}"
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/apply_for_intern_new.css' %}">
+  <link rel="stylesheet" href="{% static 'css/bootstrap5-overrides.css' %}">
+  <link rel="stylesheet" href="{% static 'css/course_details.css' %}">
+  
+  <!-- Modal responsiveness improvements -->
+  <style>
+    /* Modal improvements for all screen sizes */
+    .modal-dialog {
+      margin: 0.75rem auto;
+      max-width: 90%;
+      height: auto;
+    }
+    
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+      height: auto;
+      max-height: calc(100vh - 3.5rem);
+    }
+    
+    .modal-body {
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+    
+    @media (max-width: 767.98px) {
+      .modal-dialog {
+        margin: 0.5rem auto;
+        max-width: 95%;
+        height: auto;
+      }
+      
+      .modal-content {
+        border-radius: 12px;
+      }
+      
+      .modal-header {
+        padding: 0.75rem 1rem;
+      }
+      
+      .modal-body {
+        padding: 1rem;
+        max-height: calc(100vh - 180px);
+      }
+      
+      .modal-footer {
+        padding: 0.75rem 1rem;
+        justify-content: center;
+      }
+      
+      .course-details h4 {
+        font-size: 1.25rem;
+      }
+    }
+    
+    .tap-to-close-hint {
+      text-align: center;
+      color: #6c757d;
+      padding: 10px;
+      margin-top: 15px;
+      font-style: italic;
+      border-top: 1px dashed #dee2e6;
+    }
+    
+    /* Fix modal display issues */
+    .modal.show {
+      display: block !important;
+      padding-right: 0 !important;
+      overflow-y: auto;
+    }
+    
+    .modal-xl {
+      max-width: 90%;
+      margin: 1.75rem auto;
+    }
+    
+    .modal-dialog-scrollable .modal-content {
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Make the single close button more prominent */
+    .modal .btn-primary {
+      background: linear-gradient(135deg, #0d6efd, #0a58ca);
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2);
+      transition: all 0.2s ease;
+    }
+    
+    .modal .btn-primary:hover {
+      background: linear-gradient(135deg, #0b5ed7, #094bac);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(13, 110, 253, 0.3);
+    }
+    
+    .modal .btn-primary:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(13, 110, 253, 0.3);
+    }
+    
+    /* Ensure modal header is clean and simple */
+    .course-modal-header {
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      padding: 15px 20px;
+    }
+    
+    /* Add pulse animation to close button for visibility */
+    @keyframes pulse-attention {
+      0% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(108, 117, 125, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(108, 117, 125, 0); }
+    }
+    
+    .modal-footer .btn-lg {
+      animation: pulse-attention 2s infinite;
+    }
+  </style>
 </head>
 <body>
+  <!-- Background accents -->
+  <div class="bg-accents">
+    <div class="accent-shape accent-shape-1"></div>
+    <div class="accent-shape accent-shape-2"></div>
+    <div class="accent-line accent-line-1"></div>
+    <div class="accent-line accent-line-2"></div>
+  </div>
+  
   <div class="application-container">
     <div class="application-box">
       <!-- Back Button -->
@@ -39,9 +170,7 @@
         {% for message in messages %}
           <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
             {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         {% endfor %}
       {% endif %}
@@ -50,119 +179,169 @@
       <form method="POST" id="applicationForm">
         {% csrf_token %}
         
-        <!-- Personal Information Row -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="id_name" class="form-label">Full Name</label>
-            <div class="input-group">
-              <i class="fas fa-user input-icon"></i>
-              <input type="text" class="form-control" id="id_name" name="name" placeholder="Enter your full name" required>
-            </div>
-          </div>
+        <!-- Personal Information Section -->
+        <div class="form-section">
+          <h3 class="form-section-title">Personal Information</h3>
           
-          <div class="form-group">
-            <label for="id_roll_no" class="form-label">Roll Number</label>
-            <div class="input-group">
-              <i class="fas fa-id-card input-icon"></i>
-              <input type="text" class="form-control" id="id_roll_no" name="roll_no" placeholder="Enter roll number" required>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_name" class="form-label">Full Name <span class="required">*</span></label>
+                <input type="text" class="form-control" id="id_name" name="name" placeholder="Enter your full name" required>
+              </div>
             </div>
-          </div>
+          
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_roll_no" class="form-label">Roll Number <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                  <input type="text" class="form-control" id="id_roll_no" name="roll_no" placeholder="Enter roll number" required>
+                </div>
+              </div>
+            </div>
         </div>
 
         <!-- Academic Information Row -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="id_department" class="form-label">Department</label>
-            <div class="input-group">
-              <i class="fas fa-graduation-cap input-icon"></i>
-              <select class="form-control" id="id_department" name="department" required>
-                <option value="">-- Select Department --</option>
-                <option value="CSE">CSE</option>
-                <option value="AI&DS">AI&DS</option>
-                <option value="ECE">ECE</option>
-                <option value="IT">IT</option>
-                <option value="MECH">MECH</option>
-                <option value="CYS">CYS</option>
-                <option value="AIML">AIML</option>
-                <option value="CSBS">CSBS</option>
-              </select>
-            </div>
-          </div>
+        <div class="form-section">
+          <h3 class="form-section-title">Academic Information</h3>
           
-          <div class="form-group">
-            <label for="id_cgpa" class="form-label">CGPA</label>
-            <div class="input-group">
-              <i class="fas fa-chart-line input-icon"></i>
-              <input type="number" step="0.01" min="0" max="10" class="form-control" id="id_cgpa" name="cgpa" placeholder="0.00" required>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_department" class="form-label">Department <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-graduation-cap"></i></span>
+                  <select class="form-select" id="id_department" name="department" required>
+                    <option value="">-- Select Department --</option>
+                    <option value="CSE">CSE</option>
+                    <option value="AI&DS">AI&DS</option>
+                    <option value="ECE">ECE</option>
+                    <option value="IT">IT</option>
+                    <option value="MECH">MECH</option>
+                    <option value="CYS">CYS</option>
+                    <option value="AIML">AIML</option>
+                    <option value="CSBS">CSBS</option>
+                  </select>
+                </div>
+              </div>
             </div>
-          </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_cgpa" class="form-label">CGPA <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-chart-line"></i></span>
+                  <input type="number" step="0.01" min="0" max="10" class="form-control" id="id_cgpa" name="cgpa" placeholder="0.00" required>
+                </div>
+              </div>
+            </div>
         </div>
 
         <!-- Additional Information Row -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="id_arrears" class="form-label">Number of Arrears</label>
-            <div class="input-group">
-              <i class="fas fa-exclamation-triangle input-icon"></i>
-              <input type="number" min="0" class="form-control" id="id_arrears" name="arrears" placeholder="0" required>
-            </div>
-          </div>
+        <div class="form-section">
+          <h3 class="form-section-title">Additional Information</h3>
           
-          <div class="form-group">
-            <label for="id_gender" class="form-label">Gender</label>
-            <select class="form-control" id="id_gender" name="gender" required>
-              <option value="">-- Select Gender --</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_arrears" class="form-label">Number of Arrears <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-exclamation-triangle"></i></span>
+                  <input type="number" min="0" class="form-control" id="id_arrears" name="arrears" placeholder="0" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_gender" class="form-label">Gender <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-user"></i></span>
+                  <select class="form-select" id="id_gender" name="gender" required>
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Contact Information -->
-        <div class="form-group">
-          <label for="id_clg_mailid" class="form-label">College Email ID</label>
-          <div class="input-group">
-            <i class="fas fa-envelope input-icon"></i>
-            <input type="email" class="form-control" id="id_clg_mailid" name="clg_mailid" placeholder="your.email@college.edu" required>
+        <div class="form-section">
+          <h3 class="form-section-title">Contact Information</h3>
+          
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_clg_mailid" class="form-label">College Email ID <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                  <input type="email" class="form-control" id="id_clg_mailid" name="clg_mailid" placeholder="your.email@college.edu" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="id_phone" class="form-label">Phone Number <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                  <input type="tel" class="form-control" id="id_phone" name="phone" placeholder="Your phone number" required>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Course Selection -->
-        <div class="form-group">
-          <label for="id_course_duration" class="form-label">Course and Duration</label>
-          <div class="input-group">
-            <select class="form-control" id="id_course_duration" name="course_duration" required>
-              <option value="">-- Select Course --</option>
-              {% for course in courses %}
-                <option value="{{ course.id }}">{{ course.course_name }} - {{ course.duration }}</option>
-              {% endfor %}
-            </select>
-            <div class="input-group-append">
-              <button type="button" class="btn btn-info" id="viewCourseDetails">
-                <i class="fas fa-info-circle"></i> Course Info
-              </button>
+        <div class="form-section">
+          <h3 class="form-section-title">Course Selection</h3>
+          
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="id_course_duration" class="form-label">Course and Duration <span class="required">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="fas fa-book"></i></span>
+                  <select class="form-select" id="id_course_duration" name="course_duration" required>
+                    <option value="">-- Select Course --</option>
+                    {% for course in courses %}
+                      <option value="{{ course.id }}">{{ course.course_name }} - {{ course.duration }}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="button" class="btn btn-info" id="viewCourseDetails">
+                    <i class="fas fa-info-circle"></i> <span class="d-none d-md-inline"></span>Course Info</span>
+                  </button>
+                </div>
+                <small class="form-text text-muted">Select a course to view its details. You can also click the "Course Info" button anytime.</small>
+                <!-- Notification for course selection -->
+                <div id="courseNotification" class="mt-2 alert alert-success d-none">
+                  <i class="fas fa-check-circle me-2"></i> Course selected. Course details displayed.
+                </div>
+              </div>
             </div>
           </div>
-          <small class="form-text text-muted">Select a course to automatically see course details. Use the Course Info button to view details again.</small>
         </div>
 
-        <button type="submit" class="btn btn-submit" id="submitBtn">
-          <span class="btn-text">Submit Application</span>
-        </button>
+        <div class="form-section">
+          <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+            <i class="fas fa-paper-plane me-2"></i> Submit Application
+          </button>
+        </div>
       </form>
     </div>
   </div>
 
   <!-- Course Details Modal -->
-  <div class="modal fade" id="courseDetailsModal" tabindex="-1" role="dialog" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+  <div class="modal fade" id="courseDetailsModal" tabindex="-1" aria-labelledby="courseDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header course-modal-header">
           <h5 class="modal-title" id="courseDetailsModalLabel">Course Details</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
         <div class="modal-body">
           <div id="courseDetails">
@@ -307,28 +486,106 @@
               </div>
             </div>
             
-
-            
-            <div class="course-details" id="default-message" style="display:block;">
-              <p class="alert alert-info">Please select a course to view its details.</p>
+            <!-- Default message container for unrecognized courses -->
+            <div id="default-message" style="display:none;">
+              <div class="alert alert-info d-flex align-items-center">
+                <i class="fas fa-info-circle me-3 fs-4"></i>
+                <div>
+                  <h5 class="alert-heading">Course Information</h5>
+                  <p class="mb-0">Please select a course from the dropdown to view its details.</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary btn-lg" data-bs-dismiss="modal" id="closeModalBtn">
+            <i class="fas fa-times-circle me-2"></i> Close
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-lg w-100" data-bs-dismiss="modal" id="closeModalBtn">
+            <i class="fas fa-check-circle me-2"></i> Close
+          </button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Scripts -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{% static 'js/apply_for_intern.js' %}"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  
+  <!-- Fix for modal display issues -->
+  <script>
+    // Fix modal positioning when it opens
+    $(document).ready(function() {
+      const fixModalPosition = function() {
+        $('.modal').css('overflow-y', 'auto');
+        $('.modal-dialog').css({
+          'margin': '1.75rem auto',
+          'max-width': '90%',
+          'height': 'auto',
+          'display': 'flex',
+          'align-items': 'center',
+          'pointer-events': 'all'
+        });
+        $('.modal-content').css({
+          'height': 'auto',
+          'max-height': 'calc(100vh - 3.5rem)',
+          'width': '100%'
+        });
+      };
+      
+      // Apply fixes when any modal is shown
+      $('.modal').on('shown.bs.modal', function() {
+        fixModalPosition();
+        // Force redraw to ensure proper layout
+        setTimeout(fixModalPosition, 50);
+      });
+      
+      // Handle window resize
+      $(window).resize(function() {
+        if ($('.modal.show').length) {
+          fixModalPosition();
+        }
+      });
+    });
+  </script>
+  
   <script>
     // Course details functionality
     $(document).ready(function() {
+      // Initialize modal object once
+      let courseModal;
+      
+      // Initialize the modal when document is ready
+      function initModal() {
+        const modalElement = document.getElementById('courseDetailsModal');
+        
+        // Make sure the element exists before initializing
+        if (!modalElement) {
+          console.error('Course details modal element not found');
+          return;
+        }
+        
+        courseModal = new bootstrap.Modal(modalElement, {
+          backdrop: true,      // Enable backdrop but allow clicking outside to close
+          keyboard: true,      // Allow ESC key to close the modal
+          focus: true          // Focus on modal when opened for better accessibility
+        });
+        
+        // Add event listener for when modal is hidden
+        modalElement.addEventListener('hidden.bs.modal', function() {
+          // Optional: Do something when modal is closed
+        });
+      }
+      
+      // Call initModal once
+      initModal();
+      
       // Function to update course details in the modal
       function updateCourseDetails() {
         // Get the selected course
@@ -340,13 +597,15 @@
           $('#courseDetailsModalLabel').text(selectedCourseText);
         } else {
           $('#courseDetailsModalLabel').text('Course Details');
+          return; // Don't show modal if no course is selected
         }
         
         // Reset modal header class
-        $('.course-modal-header').removeClass('react python ml web devops');
+        $('.course-modal-header').removeClass('aiml fullstack iot cloud-devops cybersecurity');
         
         // Hide all course details first
         $('.course-details').hide();
+        $('#default-message').hide();
         
         // Show appropriate course details based on selection
         if (selectedCourse.includes('ai') || selectedCourse.includes('ml') || selectedCourse.includes('machine')) {
@@ -364,30 +623,50 @@
         } else if (selectedCourse.includes('cyber') || selectedCourse.includes('security')) {
           $('#cybersecurity-details').show();
           $('.course-modal-header').addClass('cybersecurity');
-        } else if (!selectedCourse.includes('select')) {
-          // If a course is selected but doesn't match any of our pre-defined ones
-          $('#default-message').html('<div class="alert alert-info">Detailed information about "' + 
-            $('#id_course_duration option:selected').text() + 
-            '" will be provided during orientation.</div>').show();
         } else {
-          // No course selected
-          $('#default-message').html('<p class="alert alert-info">Please select a course to view its details.</p>').show();
+          // If a course is selected but doesn't match any of our pre-defined ones
+          $('#default-message').html('<div class="alert alert-info d-flex align-items-center">' +
+            '<i class="fas fa-info-circle me-3 fs-4"></i>' +
+            '<div><h5 class="alert-heading">Course Information</h5>' +
+            '<p>Detailed information about "' + selectedCourseText + '" will be provided during orientation.</p></div>' +
+            '</div>').show();
         }
       }
       
       // Course details button click event
-      $('#viewCourseDetails').click(function() {
-        $('#courseDetailsModal').modal('show');
+      $('#viewCourseDetails').click(function(e) {
+        e.preventDefault();
         updateCourseDetails();
+        if (courseModal) {
+          courseModal.show();
+        }
       });
       
-      // Update details when course selection changes
+      // Update details and automatically show the modal when course selection changes
       $('#id_course_duration').change(function() {
-        // Only automatically open modal if a real course is selected (not the placeholder)
+        // If a course is selected, update details and show the modal
         if ($(this).val() !== '') {
-          // Show details modal when a course is selected
-          $('#courseDetailsModal').modal('show');
-          updateCourseDetails();
+          try {
+            // Update the course details
+            updateCourseDetails();
+            
+            // Automatically open the modal
+            if (courseModal) {
+              courseModal.show();
+              
+              // Show a brief notification that course details are displayed
+              $('#courseNotification').removeClass('d-none').show().delay(3000).fadeOut(function() {
+                $(this).addClass('d-none');
+              });
+            }
+          } catch (error) {
+            console.error('Error showing course details:', error);
+            // Show fallback message if something goes wrong
+            $('#default-message').html('<div class="alert alert-warning">Unable to load course details. Please try again.</div>').show();
+            if (courseModal) {
+              courseModal.show();
+            }
+          }
         }
       });
       
@@ -395,6 +674,60 @@
       $('#courseDetailsModal').on('shown.bs.modal', function() {
         updateCourseDetails();
       });
+      
+      // Add event handler for close button
+      $('#closeModalBtn').click(function() {
+        if (courseModal) {
+          courseModal.hide();
+        }
+      });
+      
+      // Ensure modal is properly positioned and fully visible
+      $('#courseDetailsModal').on('shown.bs.modal', function() {
+        // Ensure proper positioning
+        const modalDialog = $(this).find('.modal-dialog');
+        const windowHeight = window.innerHeight;
+        const modalHeight = modalDialog.height();
+        
+        // Add close instruction for better UX
+        if (window.innerWidth < 768) {
+          const tapInstruction = $('<div class="tap-to-close-hint">Tap the blue button below to close</div>');
+          $('.modal-body').append(tapInstruction);
+          setTimeout(() => tapInstruction.fadeOut(), 3000);
+        }
+        
+        // Force redraw to ensure proper display
+        setTimeout(() => {
+          $(window).trigger('resize');
+          modalDialog.css('display', 'flex');
+        }, 50);
+      });
+      
+      // Handle escape key press
+      $(document).keydown(function(e) {
+        if (e.key === 'Escape' && courseModal) {
+          courseModal.hide();
+        }
+      });
+    });
+  </script>
+  
+  <!-- Progress bar initialization -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set initial progress
+      const progressFill = document.getElementById('progressFill');
+      progressFill.style.width = '10%';
+      
+      // You can update this based on form steps if you implement a multi-step form
+      // Example:
+      // const totalSteps = 4;
+      // let currentStep = 1;
+      // 
+      // function updateProgress() {
+      //   const progressPercentage = (currentStep / totalSteps) * 100;
+      //   progressFill.style.width = `${progressPercentage}%`;
+      // }
     });
   </script>
 </body>
