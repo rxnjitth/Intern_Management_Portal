@@ -615,7 +615,9 @@ def download_certificate(request):
     if not intern.is_certified:
         raise Http404("❌ Certificate not yet approved.")
 
-    name = intern.name
+    # Get the full name from the intern record
+    name = intern.name.strip() if intern.name else user.username
+    print(f"Generating certificate for: {name}")
 
     template_path = os.path.join(settings.BASE_DIR, 'ips_intern', 'static', 'images', 'certificate.png')
     font_path = os.path.join(settings.BASE_DIR, 'ips_intern', 'static', 'fonts', 'arial.ttf')
@@ -623,24 +625,28 @@ def download_certificate(request):
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, f'{user.username}_certificate.png')
 
-    if not os.path.exists(output_path):
-        try:
-            image = Image.open(template_path).convert('RGB')
-            draw = ImageDraw.Draw(image)
-            font = ImageFont.truetype(font_path, size=48)
+    # Always regenerate the certificate to ensure the name is correct
+    if os.path.exists(output_path):
+        # Remove the existing certificate to regenerate with correct name
+        os.remove(output_path)
+        
+    try:
+        image = Image.open(template_path).convert('RGB')
+        draw = ImageDraw.Draw(image)
+        font = ImageFont.truetype(font_path, size=48)
 
-            image_width, image_height = image.size
-            text_bbox = draw.textbbox((0, 0), name, font=font)
-            text_width = text_bbox[2] - text_bbox[0]
-            x = (image_width - text_width) / 2
-            y = image_height / 2 + 60
+        image_width, image_height = image.size
+        text_bbox = draw.textbbox((0, 0), name, font=font)
+        text_width = text_bbox[2] - text_bbox[0]
+        x = (image_width - text_width) / 2
+        y = image_height / 2 + 60
 
-            draw.text((x, y), name, font=font, fill=(0, 0, 0))
-            image.save(output_path)
-
-        except Exception as e:
-            print("Certificate generation error:", e)
-            raise Http404("⚠️ Certificate generation failed.")
+        # Draw the name on the certificate
+        draw.text((x, y), name, font=font, fill=(0, 0, 0))
+        image.save(output_path)
+    except Exception as e:
+        print("Certificate generation error:", e)
+        raise Http404("⚠️ Certificate generation failed.")
 
     return FileResponse(open(output_path, 'rb'), as_attachment=True, filename=f'{user.username}_certificate.png')
 

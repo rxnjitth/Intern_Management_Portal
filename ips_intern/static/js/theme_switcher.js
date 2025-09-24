@@ -23,6 +23,9 @@ function initThemeSwitch() {
       
       // Update icon
       updateThemeIcon(themeIcon, isDarkTheme);
+      
+      // Update button title/tooltip
+      updateThemeButtonTitle();
     });
   }
 }
@@ -34,11 +37,19 @@ function updateThemeIcon(iconElement, isDarkTheme) {
   if (isDarkTheme) {
     iconElement.classList.remove('fa-moon');
     iconElement.classList.add('fa-sun');
-    iconElement.parentElement.querySelector('span').textContent = 'Light Mode';
+    // Try to update the text if span exists (in some templates)
+    const span = iconElement.parentElement.querySelector('span');
+    if (span) {
+      span.textContent = 'Light Mode';
+    }
   } else {
     iconElement.classList.remove('fa-sun');
     iconElement.classList.add('fa-moon');
-    iconElement.parentElement.querySelector('span').textContent = 'Dark Mode';
+    // Try to update the text if span exists (in some templates)
+    const span = iconElement.parentElement.querySelector('span');
+    if (span) {
+      span.textContent = 'Dark Mode';
+    }
   }
 }
 
@@ -58,6 +69,17 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Check if we need to immediately apply dark theme based on localStorage
   checkInitialTheme();
+  
+  // Initialize Bootstrap tooltips if they exist
+  if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+    const tooltips = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltips.forEach(tooltip => {
+      new bootstrap.Tooltip(tooltip);
+    });
+  }
+  
+  // Update theme toggle title based on current theme
+  updateThemeButtonTitle();
 });
 
 // Check and apply initial theme from localStorage
@@ -71,6 +93,23 @@ function checkInitialTheme() {
     const themeIcon = document.getElementById('themeIcon');
     if (themeIcon) {
       updateThemeIcon(themeIcon, true);
+    }
+  }
+}
+
+// Update theme toggle button title based on current theme
+function updateThemeButtonTitle() {
+  const themeToggle = document.getElementById('themeToggle');
+  if (!themeToggle) return;
+  
+  const isDarkTheme = document.documentElement.classList.contains('dark-theme');
+  themeToggle.setAttribute('title', isDarkTheme ? 'Switch to Light Mode' : 'Switch to Dark Mode');
+  
+  // Update tooltip if Bootstrap is available and the tooltip is already initialized
+  if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+    const tooltipInstance = bootstrap.Tooltip.getInstance(themeToggle);
+    if (tooltipInstance) {
+      tooltipInstance.setContent({ '.tooltip-inner': isDarkTheme ? 'Switch to Light Mode' : 'Switch to Dark Mode' });
     }
   }
 }

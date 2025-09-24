@@ -8,7 +8,12 @@ class TaskReportForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['topic'].widget.attrs.update({'placeholder': 'Enter your task for today'})
+        self.fields['topic'].widget.attrs.update({
+            'class': 'form-control', 
+            'placeholder': ' ',
+            'id': 'taskTopicField',
+            'rows': '5'
+        })
 
 class InternApplicationForm(forms.ModelForm):
     class Meta:
