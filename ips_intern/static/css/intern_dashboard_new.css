@@ -22,7 +22,11 @@
   --border-radius: 12px;
   --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   --transition: all 0.3s ease;
+  --bg-input: #ffffff;
+  --border-color: var(--gray-300);
+  --text-color: var(--gray-800);
 }
+
 
 /* Base Styles */
 * {
@@ -42,6 +46,12 @@ body {
 .dark-theme body {
   background-color: var(--gray-900);
   color: var(--gray-100);
+}
+
+.dark-theme {
+  --bg-input: var(--gray-800);
+  --border-color: var(--gray-700);
+  --text-color: var(--gray-200);
 }
 
 /* Dashboard Layout */
@@ -217,18 +227,58 @@ body {
   padding: 0.5rem;
   border-radius: 50%;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .dark-theme .theme-toggle {
   color: var(--gray-100);
 }
 
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(79, 70, 229, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+  z-index: -1;
+}
+
+.theme-toggle:hover::before {
+  width: 50px;
+  height: 50px;
+}
+
 .theme-toggle:hover {
-  background-color: var(--gray-200);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dark-theme .theme-toggle:hover {
-  background-color: var(--gray-700);
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.theme-toggle i {
+  transition: transform 0.5s ease, color 0.3s ease;
+}
+
+.theme-toggle:hover i {
+  transform: rotate(15deg);
+  color: var(--primary);
+}
+
+.dark-theme .theme-toggle:hover i {
+  color: var(--primary-light);
 }
 
 .logout-btn {
@@ -822,4 +872,41 @@ html:not(.dark-theme) .dark-mode-toggle i {
 
 html.dark-theme .dark-mode-toggle i {
   transform: rotate(360deg);
+}
+
+/* Floating Label Styles */
+.form-floating > .form-control {
+  height: auto;
+  min-height: 120px;
+  line-height: 1.5;
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.form-floating > label {
+  color: var(--gray-500);
+  transition: all 0.3s ease;
+  padding: 0.75rem;
+  opacity: 0.65;
+}
+
+.form-floating > .form-control:focus,
+.form-floating > .form-control:not(:placeholder-shown) {
+  padding-top: 1.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+  opacity: 0.8;
+  transform: scale(0.85) translateY(-0.75rem);
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.dark-theme .form-floating > .form-control:focus ~ label,
+.dark-theme .form-floating > .form-control:not(:placeholder-shown) ~ label {
+  color: var(--primary-light);
 }

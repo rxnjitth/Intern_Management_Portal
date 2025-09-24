@@ -10,7 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="{% static 'css/intern_dashboard_new.css' %}">
+    <link rel="stylesheet" href="{% static 'css/intern_dashboard_extended.css' %}">
     <link rel="stylesheet" href="{% static 'css/dark_theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
     <script>
         // Apply theme immediately before DOM is ready to prevent flash of incorrect theme
         (function() {
@@ -21,287 +23,6 @@
             }
         })();
     </script>
-        .toast {
-            background: #28a745;
-            border-radius: 6px;
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            padding: clamp(1.5rem, 3vw, 2rem);
-            margin-bottom: clamp(1rem, 2vw, 1.5rem);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .section-title {
-            font-size: clamp(1.2rem, 3vw, 1.4rem);
-            font-weight: 600;
-            color: #343a40;
-            margin-bottom: clamp(0.75rem, 2vw, 1rem);
-        }
-        .welcome-section {
-            text-align: center;
-            margin-bottom: clamp(1.5rem, 3vw, 2rem);
-        }
-        .welcome-title {
-            font-size: clamp(1.5rem, 3.5vw, 1.8rem);
-            font-weight: 700;
-            color: #343a40;
-        }
-        .welcome-subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.1rem);
-            color: #007bff;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: clamp(0.75rem, 2vw, 1rem);
-            margin-bottom: clamp(1rem, 2vw, 1.5rem);
-        }
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: clamp(1rem, 2vw, 1.25rem);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .stat-icon {
-            font-size: clamp(1.8rem, 4vw, 2rem);
-            color: #007bff;
-            margin-bottom: 0.5rem;
-        }
-        .stat-number {
-            font-size: clamp(1.5rem, 4vw, 1.8rem);
-            font-weight: 700;
-            color: #007bff;
-        }
-        .stat-label {
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            color: #343a40;
-        }
-        .progress-container {
-            text-align: center;
-        }
-        .progress-ring {
-            position: relative;
-            width: 240px;
-            height: 240px;
-            margin: 0 auto;
-        }
-        .progress-ring-bg, .progress-ring-fill {
-            fill: none;
-            stroke-width: 20;
-            r: 110;
-            cx: 120;
-            cy: 120;
-        }
-        .progress-ring-bg {
-            stroke: #e9ecef;
-        }
-        .progress-ring-fill {
-            stroke: url(#progressGradient);
-            stroke-dasharray: 691;
-            stroke-dashoffset: calc(691 - (691 * {{ progress }}) / 100);
-            transition: stroke-dashoffset 1s ease;
-        }
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(1.5rem, 4vw, 1.8rem);
-            font-weight: 700;
-            color: #007bff;
-        }
-        .progress-subtitle {
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            color: #6c757d;
-            margin-top: 0.5rem;
-        }
-        .certificate-section {
-            text-align: center;
-        }
-        .alert-modern {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            border-radius: 6px;
-            padding: clamp(0.5rem, 1.5vw, 0.75rem);
-            margin-bottom: clamp(0.75rem, 2vw, 1rem);
-        }
-        .certificate-preview {
-            position: relative;
-            max-width: 100%;
-        }
-        .certificate-preview img {
-            border-radius: 6px;
-        }
-        .certificate-lock {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: clamp(2rem, 5vw, 2.5rem);
-            color: #dc3545;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 0.5rem;
-            border-radius: 50%;
-        }
-        .form-container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .form-floating input, .form-floating textarea {
-            font-size: clamp(0.85rem, 2vw, 0.95rem);
-            border-radius: 6px;
-            border: 1px solid #ced4da;
-        }
-        .form-floating label {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-        }
-        .task-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .task-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: clamp(0.5rem, 1.5vw, 0.75rem);
-            border-bottom: 1px solid #e9ecef;
-        }
-        .task-date {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            color: #6c757d;
-        }
-        .task-content {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            color: #343a40;
-            flex: 1;
-            text-align: left;
-            margin-left: 1rem;
-        }
-        .empty-state {
-            text-align: center;
-            color: #6c757d;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-        .empty-state i {
-            font-size: clamp(1.5rem, 4vw, 1.8rem);
-            margin-bottom: 0.5rem;
-        }
-        .btn-modern, .btn-download {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: clamp(0.6rem, 2vw, 0.8rem);
-            font-size: clamp(0.9rem, 2vw, 1rem);
-            border-radius: 6px;
-            background: #28a745;
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-modern::before, .btn-download::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-            z-index: 0;
-        }
-        .btn-modern:hover::before, .btn-download:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-        .btn-modern:hover, .btn-download:hover {
-            background: #218838;
-            box-shadow: 0 0 15px rgba(40, 167, 69, 0.5);
-        }
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 0.5rem;
-            }
-            .welcome-title {
-                font-size: clamp(1.3rem, 3vw, 1.5rem);
-            }
-            .welcome-subtitle {
-                font-size: clamp(0.9rem, 2vw, 1rem);
-            }
-            .section-title {
-                font-size: clamp(1rem, 2.5vw, 1.2rem);
-            }
-            .glass-card, .stat-card {
-                padding: clamp(1rem, 2.5vw, 1.5rem);
-            }
-            .progress-ring {
-                width: 200px;
-                height: 200px;
-            }
-            .progress-ring-bg, .progress-ring-fill {
-                cx: 100;
-                cy: 100;
-                r: 90;
-            }
-            .progress-text {
-                font-size: clamp(1.3rem, 3.5vw, 1.5rem);
-            }
-            .btn-modern, .btn-download {
-                padding: clamp(0.5rem, 1.5vw, 0.6rem);
-                font-size: clamp(0.85rem, 2vw, 0.95rem);
-            }
-        }
-        @media (max-width: 576px) {
-            .navbar-brand {
-                font-size: clamp(1rem, 2.5vw, 1.1rem);
-            }
-            .navbar .btn {
-                padding: clamp(0.3rem, 1.5vw, 0.4rem) clamp(0.6rem, 1.8vw, 0.8rem);
-                font-size: clamp(0.7rem, 1.8vw, 0.8rem);
-            }
-            .welcome-title {
-                font-size: clamp(1.1rem, 3vw, 1.2rem);
-            }
-            .welcome-subtitle {
-                font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .progress-ring {
-                width: 160px;
-                height: 160px;
-            }
-            .progress-ring-bg, .progress-ring-fill {
-                cx: 80;
-                cy: 80;
-                r: 70;
-            }
-            .progress-text {
-                font-size: clamp(1.1rem, 3vw, 1.2rem);
-            }
-        }
-    </style>
-
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
 </head>
 <body>
     <div class="dashboard-container">
@@ -353,10 +74,7 @@
             </ul>
             
             <div class="sidebar-footer">
-                <a href="{% url 'custom_logout' %}" class="btn-primary btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
+                <!-- Footer content can be added here if needed -->
             </div>
         </div>
 
@@ -369,8 +87,9 @@
                 </button>
                 <h1 class="page-title">Intern Dashboard</h1>
                 <div class="header-actions">
-                    <button id="themeToggle" class="theme-toggle">
+                    <button id="themeToggle" class="theme-toggle" title="Toggle Dark/Light Mode" data-bs-toggle="tooltip" data-bs-placement="bottom">
                         <i id="themeIcon" class="fas fa-moon"></i>
+                        <span class="visually-hidden">Toggle Theme</span>
                     </button>
                     <a href="{% url 'custom_logout' %}" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
@@ -442,9 +161,9 @@
                 <div class="card-body">
                     <form method="post" class="task-form">
                         {% csrf_token %}
-                        <div class="form-group mb-3">
+                        <div class="form-floating mb-3">
                             {{ form.topic }}
-                            <label for="{{ form.topic.id_for_label }}">What did you learn today?</label>
+                            <label for="taskTopicField">What did you learn today?</label>
                         </div>
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary">
@@ -477,6 +196,7 @@
                                 <circle class="circle-bg" cx="100" cy="100" r="90" />
                                 <circle class="circle-progress" cx="100" cy="100" r="90"
                                     stroke-dasharray="565.48" 
+                                    data-progress="{{ progress }}"
                                     stroke-dashoffset="{% widthratio progress 100 565.48 as offset %}{{ offset }}" />
                             </svg>
                             <div class="progress-text">
@@ -488,30 +208,6 @@
                     </div>
                 </div>
             </div>
-
-        <!-- Progress Section -->
-        <div class="glass-card fade-in">
-            <h3 class="section-title">
-                <i class="fas fa-chart-pie"></i> Your Progress Journey
-            </h3>
-            <div class="progress-container">
-                <div class="progress-ring">
-                    <svg>
-                        <defs>
-                            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
-                                <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <circle class="progress-ring-bg" cx="120" cy="120" r="110"></circle>
-                        <circle class="progress-ring-fill" cx="120" cy="120" r="110"></circle>
-                    </svg>
-                    <div class="progress-text">{{ progress }}%</div>
-                </div>
-                <p class="progress-subtitle">{{ submission_count }} of {{ total_days }} days completed</p>
-            </div>
-        </div>
 
             <!-- Certificate Section -->
             <div class="card fade-in" id="certificate">
@@ -559,22 +255,23 @@
                                     <div class="position-absolute top-50 start-50 translate-middle fs-1 text-white">
                                         <i class="fas fa-lock"></i>
                                     </div>
-                        </div>
-                    {% endif %}
-                {% else %}
-                    <div class="alert-modern alert-secondary">
-                        <i class="fas fa-lock me-2"></i>
-                        <strong>Locked:</strong> Complete all tasks to unlock your certificate.
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="alert-modern alert-secondary">
+                                <i class="fas fa-lock me-2"></i>
+                                <strong>Locked:</strong> Complete all tasks to unlock your certificate.
+                            </div>
+                            <div class="certificate-preview">
+                                <img src="{% static 'images/certificate.png' %}" alt="Locked Certificate" class="img-fluid" style="filter: blur(4px);">
+                                <div class="certificate-lock">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                    <div class="certificate-preview">
-                        <img src="{% static 'images/certificate.png' %}" alt="Locked Certificate" class="img-fluid" style="filter: blur(4px);">
-                        <div class="certificate-lock">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                    </div>
-                {% endif %}
+                </div>
             </div>
-        </div>
 
             <!-- Task Reports Section -->
             <div class="card fade-in" id="tasks">
@@ -616,36 +313,72 @@
                     {% endif %}
                 </div>
             </div>
-            </a>
+            
+            <!-- Footer -->
+            {% include 'includes/footer.html' %}
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/theme_switcher.js' %}"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const fadeElements = document.querySelectorAll('.fade-in');
-            fadeElements.forEach(el => {
-                el.classList.add('animate__animated', 'animate__fadeIn');
+        // Apply animations and interactivity when document is ready
+        $(document).ready(function() {
+            // Animation for fade in elements
+            $('.fade-in').each(function(index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
+                $(this).addClass('animate__animated animate__fadeIn');
             });
-            // Adjust progress ring SVG for smaller screens
-            const progressRing = document.querySelector('.progress-ring-fill');
-            if (window.innerWidth <= 768) {
-                progressRing.setAttribute('cx', '100');
-                progressRing.setAttribute('cy', '100');
-                progressRing.setAttribute('r', '90');
-                progressRing.setAttribute('stroke-dasharray', '565');
-                progressRing.setAttribute('stroke-dashoffset', `calc(565 - (565 * {{ progress }}) / 100)`);
+            
+            // Mobile menu toggle
+            $('#menuToggle').on('click', function() {
+                $('#sidebar').addClass('active');
+            });
+            
+            $('#closeSidebar').on('click', function() {
+                $('#sidebar').removeClass('active');
+            });
+            
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+            
+            // Enable dropdowns
+            $('.dropdown-toggle').dropdown();
+            
+            // Handle circle progress visualization
+            function adjustProgressCircle() {
+                const progressCircle = $('.circle-progress');
+                if (progressCircle.length === 0) return;
+                
+                // Get progress value from data attribute
+                const progressValue = progressCircle.data('progress') || 0;
+                
+                // Calculate SVG circle properties
+                const dashArray = 565.48; // 2πr where r=90
+                const offset = dashArray - (progressValue / 100 * dashArray);
+                
+                // Apply calculation to stroke-dashoffset
+                progressCircle.css('stroke-dashoffset', offset);
+                
+                // Responsive adjustments
+                if (window.innerWidth <= 768) {
+                    $('.progress-circle').css({
+                        'width': '160px',
+                        'height': '160px'
+                    });
+                } else if (window.innerWidth <= 576) {
+                    $('.progress-circle').css({
+                        'width': '140px',
+                        'height': '140px'
+                    });
+                }
             }
-            if (window.innerWidth <= 576) {
-                progressRing.setAttribute('cx', '80');
-                progressRing.setAttribute('cy', '80');
-                progressRing.setAttribute('r', '70');
-                progressRing.setAttribute('stroke-dasharray', '440');
-                progressRing.setAttribute('stroke-dashoffset', `calc(440 - (440 * {{ progress }}) / 100)`);
-            }
+            
+            // Initialize and add window resize listener
+            adjustProgressCircle();
+            $(window).on('resize', adjustProgressCircle);
         });
     </script>
-
-    {% include 'includes/footer.html' %}
 </body>
 </html>
