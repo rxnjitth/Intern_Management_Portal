@@ -11,72 +11,81 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Animate.css -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <link rel="stylesheet" href="{% static 'css/login_new.css' %}">
 </head>
 <body>
-  <!-- Particle background -->
-  <div class="particles" id="particles"></div>
+  <div class="login-page-container">
+    <!-- Left side with gradient background -->
+    <div class="left-panel">
+      <div class="left-content">
+        <h1>Welcome to IPS Internship Portal</h1>
+        <p>Empowering students with cutting-edge skills through immersive learning experiences. Build your career with us and join our community of tech innovators.</p>
+        <div class="shape-elements">
+          <div class="shape shape-1"></div>
+          <div class="shape shape-2"></div>
+          <div class="shape shape-3"></div>
+          <div class="shape shape-4"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right side with login form -->
+    <div class="right-panel">
+      <div class="login-container">
+        <!-- Logo -->
+        <div class="logo-container">
+          <img src="{% static 'images/ips_logo.webp' %}" alt="IPS Logo" class="ips-logo">
+        </div>
+        <!-- Login Title -->
+        <h2 class="login-title">USER LOGIN</h2>
 
-  <div class="login-container">
-    <div class="login-box animate__animated animate__fadeInUp">
-      <!-- Logo Section -->
-      <div class="logo-container">
-        <div class="logo-wrapper">
-          <div class="logo">
-            <div class="logo-image" id="logoImage">
-              IPS
+        <!-- Flash Messages -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <!-- Login Form -->
+        <form method="POST" id="loginForm" class="login-form">
+          {% csrf_token %}
+          
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-user"></i>
+              </span>
+              <input type="text" class="form-control" id="id_username" name="username" placeholder="Username" required>
             </div>
           </div>
+
+          <div class="form-group">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-lock"></i>
+              </span>
+              <input type="password" class="form-control" id="id_password" name="password" placeholder="Password" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn login-btn" id="loginBtn">
+            LOGIN
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider">
+          <span>New to IPS?</span>
         </div>
-        <h1 class="brand-title">Intern Portal</h1>
+
+        <!-- Apply Button -->
+        <a href="{% url 'apply_intern' %}" class="btn apply-btn">
+          Apply for Internship
+        </a>
       </div>
-
-      <!-- Flash Messages -->
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        {% endfor %}
-      {% endif %}
-
-      <!-- Login Form -->
-      <form method="POST" id="loginForm">
-        {% csrf_token %}
-        
-        <div class="form-group">
-          <label for="id_username" class="form-label">Username</label>
-          <div class="input-group">
-            <i class="fas fa-user input-icon"></i>
-            <input type="text" class="form-control" id="id_username" name="username" placeholder="Enter your username" required>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="id_password" class="form-label">Password</label>
-          <div class="input-group">
-            <i class="fas fa-lock input-icon"></i>
-            <input type="password" class="form-control" id="id_password" name="password" placeholder="Enter your password" required>
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-login" id="loginBtn">
-          <span class="btn-text">Sign In</span>
-        </button>
-      </form>
-
-      <!-- Divider -->
-      <div class="divider">
-        <span>New to IPS?</span>
-      </div>
-
-      <!-- Apply Button -->
-      <a href="{% url 'apply_intern' %}" class="btn btn-apply">
-        Apply for Internship
-      </a>
     </div>
   </div>
 

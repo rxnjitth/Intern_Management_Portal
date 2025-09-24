@@ -300,6 +300,9 @@
             }
         }
     </style>
+
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/blue_theme.css' %}">
 </head>
 <body>
     <div class="main-container">
@@ -467,5 +470,7 @@
             document.getElementById('activeInterns').textContent = totalInterns; // Assuming all listed interns are active
         });
     </script>
+
+    {% include 'includes/footer.html' %}
 </body>
 </html>

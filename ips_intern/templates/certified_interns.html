@@ -182,6 +182,9 @@
             }
         }
     </style>
+
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+  <link rel="stylesheet" href="{% static 'css/blue_theme.css' %}">
 </head>
 <body>
     <div class="main-container">
@@ -273,5 +276,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dataTables/1.10.21/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dataTables/1.10.21/js/dataTables.bootstrap5.min.js"></script>
+
+    {% include 'includes/footer.html' %}
 </body>
 </html>

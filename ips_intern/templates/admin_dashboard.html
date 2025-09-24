@@ -13,6 +13,10 @@
             background: linear-gradient(135deg, #e0e7ff, #f4f6f9);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: #212529;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
         }
         .navbar {
             background: linear-gradient(135deg, #2c3e50, #3498db);
@@ -32,6 +36,7 @@
             max-width: 1400px;
             margin: clamp(1.5rem, 3vw, 2rem) auto;
             padding: 0 clamp(0.5rem, 2vw, 0.75rem);
+            flex: 1;
         }
         .main-heading {
             font-size: clamp(1.5rem, 3.5vw, 1.8rem);
@@ -298,5 +303,7 @@
             });
         });
     </script>
+
+    {% include 'includes/footer.html' %}
 </body>
 </html>
