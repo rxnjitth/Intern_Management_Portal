@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Theme Test | IPS Admin</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 2rem;
+            background-color: #f8f9fa;
+        }
+        .dark-theme body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .dark-theme .container {
+            background-color: #1e1e1e;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        h1, h2 {
+            color: #1E88E5;
+        }
+        .dark-theme h1, .dark-theme h2 {
+            color: #64B5F6;
+        }
+        .btn {
+            background-color: #1E88E5;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .dark-theme .btn {
+            background-color: #1565C0;
+        }
+        .page-link {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #212529;
+        }
+        .dark-theme .page-link {
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/dark_theme.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Dark Theme Test Page</h1>
+        <p>This page helps test the dark theme functionality across all templates.</p>
+        
+        <h2>Theme Controls</h2>
+        <button id="themeToggle" class="btn">
+            <span id="themeIcon">🌙</span> Toggle Theme
+        </button>
+        <button class="btn" onclick="localStorage.removeItem('ips-theme'); location.reload();">Reset Theme Preference</button>
+        
+        <h2>Template Links</h2>
+        <p>Click these links to test if dark theme persists between pages:</p>
+        
+        <a href="{% url 'admin_dashboard' %}" class="page-link">Admin Dashboard</a>
+        <a href="{% url 'all_interns' %}" class="page-link">All Interns</a>
+        <a href="{% url 'certified_interns' %}" class="page-link">Certified Interns</a>
+        <a href="{% url 'internship_applications' %}" class="page-link">Internship Applications</a>
+        <a href="{% url 'gender_interns' 'male' %}" class="page-link">Male Interns</a>
+        <a href="{% url 'gender_interns' 'female' %}" class="page-link">Female Interns</a>
+        
+        <h2>Current Theme State</h2>
+        <div id="themeState"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const themeState = document.getElementById('themeState');
+            
+            // Check saved theme
+            const savedTheme = localStorage.getItem('ips-theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark-theme');
+                document.body.classList.add('dark-theme');
+                themeIcon.textContent = '☀️';
+                themeState.innerHTML = '<p>Current theme: Dark</p><p>Saved in localStorage: Dark</p>';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeState.innerHTML = '<p>Current theme: Light</p><p>Saved in localStorage: ' + (savedTheme || 'None') + '</p>';
+            }
+            
+            // Toggle theme
+            themeToggle.addEventListener('click', function() {
+                const isDarkTheme = document.documentElement.classList.toggle('dark-theme');
+                document.body.classList.toggle('dark-theme');
+                
+                // Update localStorage
+                localStorage.setItem('ips-theme', isDarkTheme ? 'dark' : 'light');
+                
+                // Update icon and state
+                themeIcon.textContent = isDarkTheme ? '☀️' : '🌙';
+                themeState.innerHTML = '<p>Current theme: ' + (isDarkTheme ? 'Dark' : 'Light') + '</p><p>Saved in localStorage: ' + (isDarkTheme ? 'Dark' : 'Light') + '</p>';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -9,6 +9,51 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" href="{% static 'css/internship_applications_new.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/dark_theme.css' %}" />
+  <script>
+    // Apply theme immediately before DOM is ready to prevent flash of incorrect theme
+    (function() {
+        const savedTheme = localStorage.getItem('ips-theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.classList.add('dark-theme');
+            document.body.classList.add('dark-theme');
+        }
+    })();
+  </script>
+  <style>
+    /* Direct dark theme overrides for internship_applications.html */
+    html.dark-theme,
+    html.dark-theme body {
+      background-color: #121212 !important;
+      color: #e0e0e0 !important;
+    }
+    html.dark-theme .dashboard-container {
+      background-color: #121212 !important;
+    }
+    html.dark-theme .main-content {
+      background-color: #121212 !important;
+    }
+    html.dark-theme .content-area {
+      background-color: #121212 !important;
+    }
+    html.dark-theme .data-card {
+      background-color: #1E1E1E !important;
+      color: #e0e0e0 !important;
+    }
+    html.dark-theme .card-title {
+      color: #e0e0e0 !important;
+    }
+    html.dark-theme .table {
+      color: #e0e0e0 !important;
+    }
+    html.dark-theme .table thead th {
+      background-color: #333 !important;
+      color: #e0e0e0 !important;
+    }
+    html.dark-theme .table tbody td {
+      color: #e0e0e0 !important;
+    }
+  </style>
 </head>
 <body>
   <div class="dashboard-container">
@@ -56,6 +101,8 @@
           <i class="fas fa-female"></i>
           <span>Female Interns</span>
         </a>
+
+        {% include 'includes/theme_toggle.html' %}
       </div>
       
       <div class="sidebar-footer">
@@ -239,5 +286,6 @@
       }
     });
   </script>
+  <script src="{% static 'js/theme_switcher.js' %}"></script>
 </body>
 </html>

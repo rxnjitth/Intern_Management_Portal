@@ -27,6 +27,7 @@ urlpatterns = [
     path('intern/<int:user_id>/certificate/download/', views.download_certificate, name='download_certificate'),
     path('download_pdf/', views.download_task_reports_pdf, name='download_task_reports_pdf'),
     path('download_certificate/', views.download_certificate, name='download_certificate'),
+    path('theme_test/', views.theme_test, name='theme_test'),
    
 
 ] 

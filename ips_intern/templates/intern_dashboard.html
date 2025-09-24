@@ -9,44 +9,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #e0e7ff, #f4f6f9);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #212529;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        .navbar {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .navbar-brand {
-            font-size: clamp(1.2rem, 3vw, 1.3rem);
-            font-weight: 600;
-        }
-        .navbar .btn {
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-            padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.8rem, 2vw, 1rem);
-        }
-        .container {
-            max-width: 1200px;
-            margin: clamp(1.5rem, 3vw, 2rem) auto;
-            padding: 0 clamp(0.5rem, 2vw, 0.75rem);
-            flex: 1;
-        }
-        .flash-message-container {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1050;
-            width: clamp(200px, 30vw, 300px);
-        }
+    <link rel="stylesheet" href="{% static 'css/intern_dashboard_new.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark_theme.css' %}">
+    <script>
+        // Apply theme immediately before DOM is ready to prevent flash of incorrect theme
+        (function() {
+            const savedTheme = localStorage.getItem('ips-theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark-theme');
+                document.body.classList.add('dark-theme');
+            }
+        })();
+    </script>
         .toast {
             background: #28a745;
             border-radius: 6px;
@@ -330,88 +304,190 @@
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fade-in">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fas fa-tachometer-alt me-2"></i>Intern Dashboard - {{ user.username|default:"Intern" }}
-            </a>
-            <div class="d-flex">
-                <a href="{% url 'custom_logout' %}" class="btn btn-outline-light">
-                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="{% static 'images/ips_logo.webp' %}" alt="IPS Logo" class="logo">
+                    <span class="logo-text">IPS Interns</span>
+                </div>
+                <button class="mobile-close" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="profile-section">
+                <div class="profile-img">
+                    <i class="fas fa-user-circle" style="font-size: 80px;"></i>
+                </div>
+                <h4 class="profile-name">{{ user.username|default:"Intern" }}</h4>
+                <span class="profile-title">Intern</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-tachometer-alt nav-icon"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#tasks" class="nav-link">
+                        <i class="fas fa-tasks nav-icon"></i>
+                        <span>Task Reports</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#certificate" class="nav-link">
+                        <i class="fas fa-certificate nav-icon"></i>
+                        <span>Certificate</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#progress" class="nav-link">
+                        <i class="fas fa-chart-pie nav-icon"></i>
+                        <span>Progress</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <a href="{% url 'custom_logout' %}" class="btn-primary btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
                 </a>
             </div>
         </div>
-    </nav>
 
-    <div class="container">
-        <!-- Flash Messages -->
-        {% if messages %}
-        <div class="flash-message-container fade-in">
-            {% for message in messages %}
-            <div class="toast align-items-center text-white border-0 show mb-2" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <i class="fas fa-check-circle me-2"></i>{{ message }}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">Intern Dashboard</h1>
+                <div class="header-actions">
+                    <button id="themeToggle" class="theme-toggle">
+                        <i id="themeIcon" class="fas fa-moon"></i>
+                    </button>
+                    <a href="{% url 'custom_logout' %}" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-
-
-         <div class="welcome-section fade-in">
-            <h1 class="welcome-title">
-                <i class="fas fa-user-graduate"></i> Welcome Back
-            </h1>
-            <p class="welcome-subtitle">{{ user.username|default:"Intern" }}, let's continue your journey to excellence</p>
-        </div>
-
-        <!-- Submit Task Section -->
-        <div class="glass-card fade-in">
-            <h3 class="section-title">
-                <i class="fas fa-plus-circle"></i> Submit Today's Task
-            </h3>
-            <div class="form-container">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="form-floating">
-                        {{ form.topic }}
-                        <label for="{{ form.topic.id_for_label }}"></label>
+            
+            <!-- Flash Messages -->
+            {% if messages %}
+            <div class="flash-messages fade-in">
+                {% for message in messages %}
+                <div class="certificate-alert success">
+                    <div class="certificate-icon">
+                        <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn-modern">
-                            <i class="fas fa-paper-plane"></i> Submit Task
-                        </button>
+                    <div class="certificate-content">
+                        <div class="certificate-message">{{ message }}</div>
                     </div>
-                </form>
+                </div>
+                {% endfor %}
             </div>
-        </div>
+            {% endif %}
+            
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card fade-in" style="--delay: 0.1s">
+                    <div class="stat-header">
+                        <div class="stat-title">COMPLETED TASKS</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ submission_count }}</div>
+                    <div class="stat-subtitle">Reports submitted</div>
+                </div>
+                
+                <div class="stat-card fade-in" style="--delay: 0.2s">
+                    <div class="stat-header">
+                        <div class="stat-title">TOTAL DAYS</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ total_days }}</div>
+                    <div class="stat-subtitle">Internship duration</div>
+                </div>
+                
+                <div class="stat-card fade-in" style="--delay: 0.3s">
+                    <div class="stat-header">
+                        <div class="stat-title">PROGRESS</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">{{ progress }}%</div>
+                    <div class="stat-subtitle">Completion rate</div>
+                </div>
+            </div>
+            
+            <!-- Submit Task Section -->
+            <div class="card fade-in" id="submit-task">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-plus-circle card-icon"></i>
+                        Submit Today's Task
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" class="task-form">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            {{ form.topic }}
+                            <label for="{{ form.topic.id_for_label }}">What did you learn today?</label>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Submit Task
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-        <!-- Welcome Section -->
-       
-
-        <!-- Stats Grid -->
-        <div class="stats-grid fade-in">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-tasks"></i></div>
-                <div class="stat-number" style="--number: {{ submission_count }}">{{ submission_count }}</div>
-                <div class="stat-label">Tasks Completed</div>
+            <!-- Progress Section -->
+            <div class="card fade-in" id="progress">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-chart-pie card-icon"></i>
+                        Your Progress Journey
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="progress-container">
+                        <div class="progress-circle">
+                            <svg class="progress-svg" width="200" height="200" viewBox="0 0 200 200">
+                                <defs>
+                                    <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="circle-bg" cx="100" cy="100" r="90" />
+                                <circle class="circle-progress" cx="100" cy="100" r="90"
+                                    stroke-dasharray="565.48" 
+                                    stroke-dashoffset="{% widthratio progress 100 565.48 as offset %}{{ offset }}" />
+                            </svg>
+                            <div class="progress-text">
+                                <div class="progress-value">{{ progress }}%</div>
+                                <div class="progress-label">Complete</div>
+                            </div>
+                        </div>
+                        <div class="progress-details">{{ submission_count }} of {{ total_days }} days completed</div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
-                <div class="stat-number" style="--number: {{ total_days }}">{{ total_days }}</div>
-                <div class="stat-label">Total Days</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-                <div class="stat-number" style="--number: {{ progress }}">{{ progress }}%</div>
-                <div class="stat-label">Progress</div>
-            </div>
-        </div>
 
         <!-- Progress Section -->
         <div class="glass-card fade-in">
@@ -437,36 +513,52 @@
             </div>
         </div>
 
-        <!-- Certificate Section -->
-        <div class="glass-card fade-in">
-            <h3 class="section-title">
-                <i class="fas fa-certificate"></i> Your Achievement
-            </h3>
-            <div class="certificate-section">
-                {% if progress == 100 %}
-                    {% if is_certified %}
-                        <div class="alert-modern alert-success">
-                            <i class="fas fa-trophy me-2"></i>
-                            <strong>Congratulations!</strong> Your certificate is ready for download!
-                        </div>
-                        <div class="certificate-preview">
-                            <img src="{% static 'images/certificate.png' %}" alt="Certificate Preview" class="img-fluid">
-                        </div>
-                        {% if user_role == 'INTERN' %}
-                            <a href="{% url 'download_certificate' %}" class="btn-download">
-                                <i class="fas fa-download"></i> Download Certificate
-                            </a>
-                        {% endif %}
-                    {% else %}
-                        <div class="alert-modern alert-warning">
-                            <i class="fas fa-clock me-2"></i>
-                            <strong>Almost There!</strong> You've completed 100%. Awaiting admin approval.
-                        </div>
-                        <div class="certificate-preview">
-                            <img src="{% static 'images/certificate.png' %}" alt="Locked Certificate" class="img-fluid" style="filter: blur(4px);">
-                            <div class="certificate-lock">
-                                <i class="fas fa-lock"></i>
-                            </div>
+            <!-- Certificate Section -->
+            <div class="card fade-in" id="certificate">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-certificate card-icon"></i>
+                        Your Achievement
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="certificate-section">
+                        {% if progress == 100 %}
+                            {% if is_certified %}
+                                <div class="certificate-alert success">
+                                    <div class="certificate-icon">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div class="certificate-content">
+                                        <div class="certificate-title">Congratulations!</div>
+                                        <div class="certificate-message">Your certificate is ready for download!</div>
+                                    </div>
+                                </div>
+                                <div class="certificate-preview">
+                                    <img src="{% static 'images/certificate.png' %}" alt="Certificate Preview" class="img-fluid">
+                                </div>
+                                {% if user_role == 'INTERN' %}
+                                    <div class="text-center mt-3">
+                                        <a href="{% url 'download_certificate' %}" class="btn btn-success">
+                                            <i class="fas fa-download"></i> Download Certificate
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="certificate-alert warning">
+                                    <div class="certificate-icon warning">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="certificate-content">
+                                        <div class="certificate-title">Almost There!</div>
+                                        <div class="certificate-message">You've completed 100%. Awaiting admin approval.</div>
+                                    </div>
+                                </div>
+                                <div class="certificate-preview position-relative">
+                                    <img src="{% static 'images/certificate.png' %}" alt="Locked Certificate" class="img-fluid" style="filter: blur(4px);">
+                                    <div class="position-absolute top-50 start-50 translate-middle fs-1 text-white">
+                                        <i class="fas fa-lock"></i>
+                                    </div>
                         </div>
                     {% endif %}
                 {% else %}
@@ -484,34 +576,46 @@
             </div>
         </div>
 
-        <!-- Task Reports Section -->
-        <div class="glass-card fade-in">
-            <h3 class="section-title">
-                <i class="fas fa-history"></i> Your Task History
-            </h3>
-            {% if task_reports %}
-                <div class="task-list">
-                    {% for task in task_reports %}
-                        <div class="task-item">
-                            <div class="task-date">
-                                <i class="fas fa-calendar me-2"></i>{{ task.date }}
-                            </div>
-                            <div class="task-content">{{ task.topic|truncatechars:150 }}</div>
+            <!-- Task Reports Section -->
+            <div class="card fade-in" id="tasks">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-history card-icon"></i>
+                        Your Task History
+                    </h2>
+                </div>
+                <div class="card-body">
+                    {% if task_reports %}
+                        <ul class="task-list">
+                            {% for task in task_reports %}
+                                <li class="task-item">
+                                    <div class="task-date-container">
+                                        <span class="task-date-day">{{ task.date|date:"d" }}</span>
+                                        <span class="task-date-month">{{ task.date|date:"M" }}</span>
+                                    </div>
+                                    <div class="task-content">
+                                        <div class="task-title">Day {{ forloop.counter }}</div>
+                                        <div class="task-description">{{ task.topic|truncatechars:150 }}</div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="text-center mt-4">
+                            <a href="{% url 'download_task_reports_pdf' %}" class="btn btn-primary">
+                                <i class="fas fa-file-pdf"></i> Download Reports
+                            </a>
                         </div>
-                    {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-inbox"></i>
+                            </div>
+                            <div class="empty-title">No Reports Yet</div>
+                            <div class="empty-message">No tasks submitted yet. Start your journey today!</div>
+                        </div>
+                    {% endif %}
                 </div>
-            {% else %}
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    <p>No tasks submitted yet. Start your journey today!</p>
-                </div>
-            {% endif %}
-        </div>
-
-        <!-- PDF Download Button -->
-        <div class="text-center fade-in">
-            <a href="{% url 'download_task_reports_pdf' %}" class="btn-download">
-                <i class="fas fa-file-pdf"></i> Download Reports
+            </div>
             </a>
         </div>
     </div>

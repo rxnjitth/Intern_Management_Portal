@@ -9,6 +9,57 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="{% static 'css/all_interns.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark_theme.css' %}">
+    <script>
+        // Apply theme immediately before DOM is ready to prevent flash of incorrect theme
+        (function() {
+            const savedTheme = localStorage.getItem('ips-theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark-theme');
+                document.body.classList.add('dark-theme');
+            }
+        })();
+    </script>
+    <style>
+        /* Direct dark theme overrides for all_interns.html */
+        html.dark-theme,
+        html.dark-theme body,
+        html.dark-theme .interns-page-container,
+        html.dark-theme .main-content {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+        }
+        html.dark-theme .top-bar {
+            background-color: #1E1E1E !important;
+            color: #e0e0e0 !important;
+        }
+        html.dark-theme .page-title,
+        html.dark-theme .page-subtitle {
+            color: #e0e0e0 !important;
+        }
+        html.dark-theme .data-table {
+            background-color: #1E1E1E !important;
+            color: #e0e0e0 !important;
+        }
+        html.dark-theme .table thead th {
+            background-color: #333 !important;
+            color: #e0e0e0 !important;
+        }
+        html.dark-theme .table tbody td {
+            color: #e0e0e0 !important;
+            border-color: #333 !important;
+        }
+        html.dark-theme .table tbody tr:nth-of-type(odd) {
+            background-color: #252525 !important;
+        }
+        html.dark-theme .stats-card {
+            background-color: #1E1E1E !important;
+            color: #e0e0e0 !important;
+        }
+        html.dark-theme .intern-name a {
+            color: #64B5F6 !important;
+        }
+    </style>
 </head>
 <body>
     <div class="interns-page-container">
@@ -56,6 +107,8 @@
                     <i class="fas fa-female"></i>
                     <span>Female Interns</span>
                 </a>
+
+                {% include 'includes/theme_toggle.html' %}
             </div>
             
             <div class="sidebar-footer">
@@ -277,5 +330,6 @@
             document.getElementById('activeInterns').textContent = totalInterns; // Assuming all listed interns are active
         });
     </script>
+    <script src="{% static 'js/theme_switcher.js' %}"></script>
 </body>
 </html>

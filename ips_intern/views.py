@@ -16,6 +16,9 @@ from .models import *
 from .forms import *
 import pandas as pd
 
+def theme_test(request):
+    return render(request, 'theme_test.html')
+
 def custom_login(request):
     form = AuthenticationForm()
 
