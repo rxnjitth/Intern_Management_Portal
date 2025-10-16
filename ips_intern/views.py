@@ -417,7 +417,7 @@ If you have any questions, feel free to reach out to our team.
 Warm regards,  
 IPS Tech Community Team
 """,
-        from_email='ranjith_23csb19@kgkite.ac.in',
+        from_email='ipstechcommunity@kgkite.ac.in',
         recipient_list=[application.clg_mailid],
         fail_silently=False
     )
@@ -452,7 +452,7 @@ We wish you the very best in your career journey.
 Sincerely,  
 IPS Tech Community Team
 """,
-            from_email='ranjith_23csb19@kgkite.ac.in',  # 🔁 Replace with your admin email
+            from_email='ipstechcommunity@kgkite.ac.in',  # 🔁 Replace with your admin email
             recipient_list=[application.clg_mailid],
             fail_silently=False
         )
