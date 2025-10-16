@@ -417,7 +417,7 @@ If you have any questions, feel free to reach out to our team.
 Warm regards,  
 IPS Tech Community Team
 """,
-        from_email='mranjith506@gmail.com',
+        from_email='ranjith_23csb19@kgkite.ac.in',
         recipient_list=[application.clg_mailid],
         fail_silently=False
     )
